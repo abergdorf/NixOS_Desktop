@@ -281,6 +281,7 @@ This is an attempt to put my nix files in this org-mode file
     ghostty
     zsh
     home-manager
+    nm-applet
 
 ];
 
