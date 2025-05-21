@@ -234,6 +234,7 @@ This is an attempt to put my nix files in this org-mode file
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   };
 
+  xdg.portal.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
