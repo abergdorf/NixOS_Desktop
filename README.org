@@ -55,6 +55,7 @@ This is an attempt to put my nix files in this org-mode file
     #zsh-related
     oh-my-zsh
     starship
+    fastfetch
 
 
     #hyprland stuff
@@ -62,6 +63,9 @@ This is an attempt to put my nix files in this org-mode file
     hyprland
     #hyprgui apparently repository abandonded?
     rofi
+    rofi-network-manager
+    rofi-file-browser
+    wttrbar
     waybar
     waypaper
 
@@ -81,6 +85,13 @@ This is an attempt to put my nix files in this org-mode file
     syncplay
 
 
+    #python
+    #(python314.withPackages (ppkgs: [
+    #ppkgs.numpy
+    #ppkgs.requests
+    #ppkgs.pandas
+    #ppkgs.polars
+    #]))
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -172,6 +183,9 @@ This is an attempt to put my nix files in this org-mode file
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  #Keyring for wifi password
+  services.gnome.gnome-keyring.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -281,8 +295,7 @@ This is an attempt to put my nix files in this org-mode file
     ghostty
     zsh
     home-manager
-    nm-applet
-
+    seahorse
 ];
 
   # Some programs need SUID wrappers, can be configured further or are

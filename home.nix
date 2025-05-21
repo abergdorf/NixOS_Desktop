@@ -38,6 +38,7 @@
     #zsh-related
     oh-my-zsh
     starship
+    fastfetch
 
 
     #hyprland stuff
@@ -45,6 +46,9 @@
     hyprland
     #hyprgui apparently repository abandonded?
     rofi
+    rofi-network-manager
+    rofi-file-browser
+    wttrbar
     waybar
     waypaper
 
@@ -64,6 +68,13 @@
     syncplay
 
 
+    #python
+    #(python314.withPackages (ppkgs: [
+    #ppkgs.numpy
+    #ppkgs.requests
+    #ppkgs.pandas
+    #ppkgs.polars
+    #]))
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the

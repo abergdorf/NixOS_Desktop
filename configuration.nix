@@ -26,6 +26,9 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  #Keyring for wifi password
+  services.gnome.gnome-keyring.enable = true;
+
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
@@ -134,8 +137,7 @@
     ghostty
     zsh
     home-manager
-    nm-applet
-
+    seahorse
 ];
 
   # Some programs need SUID wrappers, can be configured further or are
