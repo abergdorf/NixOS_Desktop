@@ -28,6 +28,7 @@
 
   #Keyring for wifi password
   services.gnome.gnome-keyring.enable = true;
+  environment.variables.XDG_RUNTIME_DIR = "/run/user/$UID"
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -153,6 +154,8 @@
 services.emacs = {
   enable = true;
 };
+
+programs.nm-applet.enable = true;
 
 programs.zsh = {
    enable = true;
