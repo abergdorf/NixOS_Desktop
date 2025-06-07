@@ -51,6 +51,9 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  #Enable polkit (policy kit)
+  security.polkit.enable = true;
+
   # # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   #services.xserver.desktopManager.plasma5.enable = true;
@@ -139,7 +142,9 @@
     ghostty
     zsh
     home-manager
+    gparted
     seahorse
+    polkit
 ];
 
   # Some programs need SUID wrappers, can be configured further or are
