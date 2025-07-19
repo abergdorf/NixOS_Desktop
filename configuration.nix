@@ -31,6 +31,12 @@
      settings.PasswordAuthentication = false;
    };
 
+  #plex
+  services.plex = {
+   enable = true;
+   openFirewall = true;
+
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;

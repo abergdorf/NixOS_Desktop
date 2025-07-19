@@ -67,6 +67,9 @@
     yt-dlp
     syncplay
 
+    #plex
+    plex
+
 
     #python
     #(python314.withPackages (ppkgs: [
@@ -125,6 +128,7 @@
     EDITOR = "emacs";
   };
   programs.waybar.enable = true;
+
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

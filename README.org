@@ -85,6 +85,9 @@ This is an attempt to put my nix files in this org-mode file
     yt-dlp
     syncplay
 
+    #plex
+    plex
+
 
     #python
     #(python314.withPackages (ppkgs: [
@@ -144,6 +147,7 @@ This is an attempt to put my nix files in this org-mode file
   };
   programs.waybar.enable = true;
 
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }
@@ -190,6 +194,12 @@ This is an attempt to put my nix files in this org-mode file
      settings.PasswordAuthentication = false;
    };
 
+  #plex
+  services.plex = {
+   enable = true;
+   openFirewall = true;
+
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
