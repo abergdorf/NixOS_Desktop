@@ -67,9 +67,6 @@
     yt-dlp
     syncplay
 
-    #plex
-    plex
-
 
     #python
     #(python314.withPackages (ppkgs: [
