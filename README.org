@@ -5,6 +5,7 @@
 - [[#about][ABOUT]]
 - [[#home-manager][HOME-MANAGER]]
 - [[#configurationnix][CONFIGURATION.NIX]]
+- [[#filesystemnix][FILESYSTEM.NIX]]
 - [[#flakenix][FLAKE.NIX]]
 - [[#hardware-configurationnix][HARDWARE-CONFIGURATION.NIX]]
 
@@ -166,9 +167,9 @@ This is an attempt to put my nix files in this org-mode file
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./filesystem.nix
      # <home-manager/nixos>
     ];
-
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -183,7 +184,12 @@ This is an attempt to put my nix files in this org-mode file
 
   #openSSH
 
-   services.openssh.enable = true;
+   services.openssh = {
+
+     enable = true;
+     settings.PasswordAuthentication = false;
+   };
+
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -379,6 +385,22 @@ programs.zsh = {
 
 
  #+end_src
+* FILESYSTEM.NIX
+#+begin_src nix :tangle filesystem.nix
+{ config, pkgs, ... }:
+
+{
+
+#uuid of 8tb 940f4332-3aaf-4e83-a244-5d0e3f788569
+  fileSystems."/media" = { # Choose your desired mount point
+    device = "/dev/disk/by-uuid/940f4332-3aaf-4e83-a244-5d0e3f788569"; # Replace with your actual UUID
+    fsType = "ext4"; # Replace with your filesystem type (e.g., "btrfs", "xfs")
+    options = [ "defaults" "nofail" ]; # Common options, "nofail" is useful for HDDs
+  };
+
+}
+
+#+end_src
 
 * FLAKE.NIX
  Flakes allow you to put your whole system in the user home rather than root/etc/nixos which means you don't need sudo to edit the files. Also the flake.lock file is how you can update packages without upgrading nixos?

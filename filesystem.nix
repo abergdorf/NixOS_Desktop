@@ -9,4 +9,4 @@
     options = [ "defaults" "nofail" ]; # Common options, "nofail" is useful for HDDs
   };
 
-};
+}

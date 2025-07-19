@@ -8,9 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./filesystem.nix
      # <home-manager/nixos>
     ];
-
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -25,7 +25,12 @@
 
   #openSSH
 
-   services.openssh.enable = true;
+   services.openssh = {
+
+     enable = true;
+     settings.PasswordAuthentication = false;
+   };
+
 
   # Enable networking
   networking.networkmanager.enable = true;
