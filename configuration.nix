@@ -23,6 +23,10 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  #openSSH
+
+   services.openssh.enable = true;
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -53,6 +57,25 @@
 
   #Enable polkit (policy kit)
   security.polkit.enable = true;
+
+systemd = {
+  user.services.polkit-gnome-authentication-agent-1 = {
+    description = "polkit-gnome-authentication-agent-1";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+  };
+   extraConfig = ''
+     DefaultTimeoutStopSec=10s
+   '';
+};
 
   # # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
@@ -143,8 +166,10 @@
     zsh
     home-manager
     gparted
+    openssh
     seahorse
     polkit
+    polkit_gnome
 ];
 
   # Some programs need SUID wrappers, can be configured further or are
