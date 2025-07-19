@@ -144,11 +144,14 @@ systemd = {
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # Define user groups
+  users.groups.plexusers = {};
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.andrew = {
     isNormalUser = true;
     description = "Andrew";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "plexusers"];
     packages = with pkgs; [
     #  kate
     #  thunderbird
@@ -156,6 +159,11 @@ systemd = {
     shell = pkgs.zsh;
   };
 
+  users.users.plex = {
+    isSystemUser = true; # Plex usually runs as a system user
+    extraGroups = [ "plexusers" ]; # Add "plexusers" here
+    # Other Plex user properties might be managed by the Plex module
+  };
   # Install firefox.
   programs.firefox.enable = true;
 
