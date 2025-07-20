@@ -1,16 +1,16 @@
 # .sops.yaml
 keys:
-  # Your personal Age public key (from step B)
-  - &user_key age1fku5we6lpzdd67d8mex4uhslukjgrt4n58h6she747equ9w3aexq6zfqve
+  # Your personal Age public key
+  - &primary age1fku5we6lpzdd67d8mex4uhslukjgrt4n58h6she747equ9w3aexq6zfqve
 
-  # Your host's Age public key (from step B)
+  # Your host's Age public key
   - &host_key age1dcsd8jrd3vfqu35u0ty5scg8e46u9sj5d3d30mw3mw4379c2ng6qa0kw6x
 
-creation_rules:
-  # This rule applies to any file named secrets.yaml in the secrets/ directory
-  - path_regex: secrets/secrets\.yaml$
-    key_groups:
-      - age:
-          - *user_key
-          - *host_key
+creation_rules:   # This rule applies to any file named secrets.yaml in the secrets/ directory
+
+ - path_regex: secrets/secrets\.yaml$
+   key_groups:
+   - age:
+     - *primary
+     - *host_key
   # Add more rules for different secret files or key groups if needed
