@@ -9,7 +9,6 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./filesystem.nix
-     # <home-manager/nixos>
     ];
 
   # Bootloader.
@@ -38,7 +37,37 @@
 
   };
 
-  # Enable networking
+  # Inside configuration.nix, at the top level with other options like networking, services, etc.
+sops = {
+  defaultSopsFile = ./secrets/secrets.yaml; # Path relative to configuration.nix
+  defaultSopsFormat = "yaml"; # Or json, dotenv, etc.
+
+  # Define each secret you want to make available to the system.
+  # The key names here must match the keys in your secrets.yaml.
+  secrets = {
+    "wifiPassword" = { # This matches "wifiPassword" in your secrets/secrets.yaml
+      # Optional: You can specify owner, group, and mode for the decrypted file
+      owner = "root";
+      group = "networkmanager";
+      mode = "0400";
+      # e.g., owner = "root"; group = "networkmanager"; mode = "0400";
+      # Consider 'neededForUsers = true;' if a non-root user or service needs it
+      # (e.g., NetworkManager might need to read it if you configure wifi directly).
+    };
+    # Add other secrets here if you have them, e.g., "myApiKey" = {};
+  };
+
+  # Optional: You can also define templates to combine multiple secrets into one file.
+  # templates."my_app.env" = {
+  #   content = ''
+  #     MY_API_KEY="${config.sops.placeholder.myApiKey}"
+  #   '';
+  #   owner = "myuser";
+  #   mode = "0400";
+  # };
+};
+
+   # Enable networking
   networking.networkmanager.enable = true;
 
   #Keyring for wifi password
@@ -177,7 +206,7 @@ systemd = {
     fi
 
     # Use absolute paths to coreutils and findutils binaries provided by Nixpkgs
-    ${pkgs.coreutils}/bin/chown -R plex:plexusers /media
+    ${pkgs.coreutils}/bin/chown -R andrew:plexusers /media
     ${pkgs.findutils}/bin/find /media -type d -exec ${pkgs.coreutils}/bin/chmod 775 {} \;
     ${pkgs.findutils}/bin/find /media -type f -exec ${pkgs.coreutils}/bin/chmod 664 {} \;
   '';
@@ -236,6 +265,13 @@ programs.zsh = {
    autosuggestions.enable = true;
    syntaxHighlighting.enable = true;
 };
+
+
+
+
+
+
+
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.

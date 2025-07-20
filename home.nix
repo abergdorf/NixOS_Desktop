@@ -30,21 +30,18 @@
     gcc
     llvm
     fzf
+    age
+    sops
 
     #social
     telegram-desktop
     discord
 
     #zsh-related
-    oh-my-zsh
-    starship
     fastfetch
 
 
     #hyprland stuff
-    kitty
-    hyprland
-    #hyprgui apparently repository abandonded?
     rofi
     rofi-network-manager
     rofi-file-browser
@@ -55,6 +52,7 @@
     obsidian
     obs-studio
     qbittorrent
+
 
     #zen-browser
     floorp
