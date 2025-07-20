@@ -41,6 +41,7 @@
 sops = {
   defaultSopsFile = ./secrets/secrets.yaml; # Path relative to configuration.nix
   defaultSopsFormat = "yaml"; # Or json, dotenv, etc.
+  age.keyFile = "~/.config/sops/age/keys.txt";
 
   # Define each secret you want to make available to the system.
   # The key names here must match the keys in your secrets.yaml.
@@ -54,7 +55,11 @@ sops = {
       # Consider 'neededForUsers = true;' if a non-root user or service needs it
       # (e.g., NetworkManager might need to read it if you configure wifi directly).
     };
-    # Add other secrets here if you have them, e.g., "myApiKey" = {};
+    "authUserPass" = {
+      owner = "andrew";
+      mode = "0400";
+      neededForUsers = true;
+    };
   };
 
   # Optional: You can also define templates to combine multiple secrets into one file.
@@ -67,6 +72,10 @@ sops = {
   # };
 };
 
+services.pia = {
+  enable = true;
+  authUserPassFile = config.sops.secrets.authUserPass;
+};
    # Enable networking
   networking.networkmanager.enable = true;
 

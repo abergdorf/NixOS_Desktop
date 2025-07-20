@@ -10,9 +10,11 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
+    pia.url = "github:Fuwn/pia.nix";
+    pia.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }: {
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -29,6 +31,7 @@
             # arguments to home.nix
           }
           sops-nix.nixosModules.sops
+          pia.nixosModules."x86_64-linux".default
         ];
       };
     };

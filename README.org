@@ -204,6 +204,7 @@ This is an attempt to put my nix files in this org-mode file
 sops = {
   defaultSopsFile = ./secrets/secrets.yaml; # Path relative to configuration.nix
   defaultSopsFormat = "yaml"; # Or json, dotenv, etc.
+  age.keyFile = "~/.config/sops/age/keys.txt";
 
   # Define each secret you want to make available to the system.
   # The key names here must match the keys in your secrets.yaml.
@@ -217,7 +218,11 @@ sops = {
       # Consider 'neededForUsers = true;' if a non-root user or service needs it
       # (e.g., NetworkManager might need to read it if you configure wifi directly).
     };
-    # Add other secrets here if you have them, e.g., "myApiKey" = {};
+    "authUserPass" = {
+      owner = "andrew";
+      mode = "0400";
+      neededForUsers = true;
+    };
   };
 
   # Optional: You can also define templates to combine multiple secrets into one file.
@@ -230,6 +235,10 @@ sops = {
   # };
 };
 
+services.pia = {
+  enable = true;
+  authUserPassFile = config.sops.secrets.authUserPass;
+};
    # Enable networking
   networking.networkmanager.enable = true;
 
@@ -494,9 +503,11 @@ programs.zsh = {
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
+    pia.url = "github:Fuwn/pia.nix";
+    pia.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }: {
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -513,6 +524,7 @@ programs.zsh = {
             # arguments to home.nix
           }
           sops-nix.nixosModules.sops
+          pia.nixosModules."x86_64-linux".default
         ];
       };
     };
