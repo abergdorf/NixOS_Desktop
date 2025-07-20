@@ -41,7 +41,7 @@
 sops = {
   defaultSopsFile = ./secrets/secrets.yaml; # Path relative to configuration.nix
   defaultSopsFormat = "yaml"; # Or json, dotenv, etc.
-  age.keyFile = "~/.config/sops/age/keys.txt";
+  age.keyFile = "/home/andrew/.config/sops/age/keys.txt";
 
   # Define each secret you want to make available to the system.
   # The key names here must match the keys in your secrets.yaml.
@@ -74,7 +74,7 @@ sops = {
 
 services.pia = {
   enable = true;
-  authUserPassFile = config.sops.secrets.authUserPass;
+  authUserPassFile = config.sops.defaultSopsFile;
 };
    # Enable networking
   networking.networkmanager.enable = true;
