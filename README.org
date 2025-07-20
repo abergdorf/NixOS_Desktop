@@ -56,6 +56,7 @@ This is an attempt to put my nix files in this org-mode file
     discord
 
     #zsh-related
+    starship
     fastfetch
 
 

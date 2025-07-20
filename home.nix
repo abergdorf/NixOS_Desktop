@@ -38,6 +38,7 @@
     discord
 
     #zsh-related
+    starship
     fastfetch
 
 
