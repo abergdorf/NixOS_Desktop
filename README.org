@@ -50,7 +50,7 @@ This is an attempt to put my nix files in this org-mode file
     fzf
     age
     sops
-    make
+    gnumake
 
     #social
     telegram-desktop
@@ -73,8 +73,6 @@ This is an attempt to put my nix files in this org-mode file
     obs-studio
     qbittorrent
 
-
-    #zen-browser
     floorp
 
     #video plugins
@@ -143,6 +141,11 @@ This is an attempt to put my nix files in this org-mode file
     EDITOR = "emacs";
   };
   programs.waybar.enable = true;
+
+  programs.emacs.extraPackages = epkgs: with epkgs; [
+    vterm
+  ];
+
 
 
   # Let Home Manager install and manage itself.
@@ -397,7 +400,10 @@ systemd = {
     seahorse
     polkit
     polkit_gnome
+
+    inputs.zen-browser.packages."${system}".specific
 ];
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -487,6 +493,7 @@ programs.zsh = {
     hyprland.url = "github:hyprwm/Hyprland";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: {

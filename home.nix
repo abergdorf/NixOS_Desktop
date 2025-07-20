@@ -32,7 +32,7 @@
     fzf
     age
     sops
-    make
+    gnumake
 
     #social
     telegram-desktop
@@ -55,8 +55,6 @@
     obs-studio
     qbittorrent
 
-
-    #zen-browser
     floorp
 
     #video plugins
@@ -125,6 +123,11 @@
     EDITOR = "emacs";
   };
   programs.waybar.enable = true;
+
+  programs.emacs.extraPackages = epkgs: with epkgs; [
+    vterm
+  ];
+
 
 
   # Let Home Manager install and manage itself.

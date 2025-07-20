@@ -237,7 +237,10 @@ systemd = {
     seahorse
     polkit
     polkit_gnome
+
+    inputs.zen-browser.packages."${system}".specific
 ];
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
