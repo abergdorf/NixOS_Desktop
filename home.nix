@@ -32,6 +32,7 @@
     fzf
     age
     sops
+    make
 
     #social
     telegram-desktop

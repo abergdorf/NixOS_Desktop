@@ -50,6 +50,7 @@ This is an attempt to put my nix files in this org-mode file
     fzf
     age
     sops
+    make
 
     #social
     telegram-desktop
