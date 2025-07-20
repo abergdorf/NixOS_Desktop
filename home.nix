@@ -33,6 +33,7 @@
     age
     sops
     gnumake
+    openvpn3
 
     #social
     telegram-desktop
@@ -123,6 +124,7 @@
     EDITOR = "emacs";
   };
   programs.waybar.enable = true;
+
 
   programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm

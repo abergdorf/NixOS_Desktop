@@ -76,6 +76,11 @@ services.pia = {
   enable = true;
   authUserPassFile = config.sops.defaultSopsFile;
 };
+
+
+  programs.openvpn3.enable = true;
+
+
    # Enable networking
   networking.networkmanager.enable = true;
 
