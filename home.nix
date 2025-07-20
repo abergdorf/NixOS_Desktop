@@ -33,7 +33,7 @@
     age
     sops
     gnumake
-    openvpn3
+    openvpn
 
     #social
     telegram-desktop

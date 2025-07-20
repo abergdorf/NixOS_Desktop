@@ -78,7 +78,7 @@ services.pia = {
 };
 
 
-  programs.openvpn3.enable = true;
+  #programs.openvpn.enable = true;
 
 
    # Enable networking

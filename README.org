@@ -51,7 +51,7 @@ This is an attempt to put my nix files in this org-mode file
     age
     sops
     gnumake
-    openvpn3
+    openvpn
 
     #social
     telegram-desktop
@@ -243,7 +243,7 @@ services.pia = {
 };
 
 
-  programs.openvpn3.enable = true;
+  #programs.openvpn.enable = true;
 
 
    # Enable networking
