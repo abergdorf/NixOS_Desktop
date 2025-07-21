@@ -51,6 +51,9 @@
     wttrbar
     waybar
     waypaper
+    xfce.thunar
+    kdePackages.ark
+    kdePackages.dolphin
 
     obsidian
     obs-studio

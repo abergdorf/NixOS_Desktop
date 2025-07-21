@@ -69,6 +69,9 @@ This is an attempt to put my nix files in this org-mode file
     wttrbar
     waybar
     waypaper
+    xfce.thunar
+    kdePackages.ark
+    kdePackages.dolphin
 
     obsidian
     obs-studio
@@ -248,6 +251,8 @@ services.pia = {
 
    # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
+  #to get pia to work, need to open the .ovpn file and change compress to comp-lzo no and completely remove <crl-verify> .... </crl-verify>
 
   #Keyring for wifi password
   services.gnome.gnome-keyring.enable = true;

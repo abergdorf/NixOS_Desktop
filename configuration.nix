@@ -83,6 +83,7 @@ services.pia = {
 
    # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
 
   #Keyring for wifi password
   services.gnome.gnome-keyring.enable = true;
