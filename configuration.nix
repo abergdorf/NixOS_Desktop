@@ -84,6 +84,7 @@ services.pia = {
    # Enable networking
   networking.networkmanager.enable = true;
   networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
+  #to get pia to work, need to open the .ovpn file and change compress to comp-lzo no and completely remove <crl-verify> .... </crl-verify>
 
   #Keyring for wifi password
   services.gnome.gnome-keyring.enable = true;
@@ -211,21 +212,21 @@ systemd = {
 
    # Use activationScripts to set permissions *after* the system is mounted
   # This runs every time you rebuild your NixOS configuration.
-  system.activationScripts.setMediaPermissions = ''
-    echo "Setting permissions for /media for Plex and users..."
-
-    # Ensure /media is actually mounted before attempting to change permissions
-    if ! mountpoint -q /media; then
-      echo "/media is not mounted, skipping permission setup." >&2
-      exit 0 # Exit successfully, as the drive might be absent (e.g., external)
-    fi
-
-    # Use absolute paths to coreutils and findutils binaries provided by Nixpkgs
-    ${pkgs.coreutils}/bin/chown -R andrew:plexusers /media
-    ${pkgs.findutils}/bin/find /media -type d -exec ${pkgs.coreutils}/bin/chmod 775 {} \;
-    ${pkgs.findutils}/bin/find /media -type f -exec ${pkgs.coreutils}/bin/chmod 664 {} \;
-  '';
-
+#  system.activationScripts.setMediaPermissions = ''
+#   echo "Setting permissions for /media for Plex and users..."
+#
+#    # Ensure /media is actually mounted before attempting to change permissions
+#    if ! mountpoint -q /media; then
+#      echo "/media is not mounted, skipping permission setup." >&2
+#      exit 0 # Exit successfully, as the drive might be absent (e.g., external)
+#    fi
+#
+#    # Use absolute paths to coreutils and findutils binaries provided by Nixpkgs
+#    ${pkgs.coreutils}/bin/chown -R andrew:plexusers /media
+#    ${pkgs.findutils}/bin/find /media -type d -exec ${pkgs.coreutils}/bin/chmod 775 {} \;
+#    ${pkgs.findutils}/bin/find /media -type f -exec ${pkgs.coreutils}/bin/chmod 664 {} \;
+#  '';
+#
 
   # Install firefox.
   programs.firefox.enable = true;
