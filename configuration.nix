@@ -209,7 +209,7 @@ systemd = {
     extraGroups = [ "plexusers" ]; # Add "plexusers" here
     # Other Plex user properties might be managed by the Plex module
   };
-
+  
    # Use activationScripts to set permissions *after* the system is mounted
   # This runs every time you rebuild your NixOS configuration.
 #  system.activationScripts.setMediaPermissions = ''

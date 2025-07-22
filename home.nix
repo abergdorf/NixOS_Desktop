@@ -34,6 +34,7 @@
     sops
     gnumake
     openvpn
+    gh
 
     #social
     telegram-desktop
