@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {inputs, config, pkgs, ... }:
 #org-mode tangled
 {
@@ -11,7 +7,52 @@
       ./filesystem.nix
     ];
 
-  # Bootloader.
+   nix = {
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        ];
+      substituters = ["https://hyprland.cachix.org"];
+      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  };
+#gc = {  #garbage-collect nix-store
+#automatic = true;
+    #dates = "weekly";
+    #options = "--delete-older-than 7d";
+    #};
+};
+   # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+
+  #Enable polkit (policy kit)
+  security.polkit.enable = true;
+
+systemd = {
+  user.services.polkit-gnome-authentication-agent-1 = {
+    description = "polkit-gnome-authentication-agent-1";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+  };
+   extraConfig = ''
+     DefaultTimeoutStopSec=10s
+   '';
+};
+
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -30,14 +71,26 @@
      settings.PasswordAuthentication = false;
    };
 
-  #plex
-  services.plex = {
-   enable = true;
-   openFirewall = true;
+   # Enable networking
+  networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
 
-  };
+  programs.nm-applet.enable = true;
 
-  # Inside configuration.nix, at the top level with other options like networking, services, etc.
+  #Keyring for wifi password
+  services.gnome.gnome-keyring.enable = true;
+  environment.variables.XDG_RUNTIME_DIR = "/run/user/$UID";
+
+  #to get pia to work, need to open the .ovpn file and change compress to comp-lzo no and completely remove <crl-verify> .... </crl-verify>
+  services.pia = {
+  enable = true;
+  authUserPassFile = config.sops.defaultSopsFile;
+};
+
+
+  #programs.openvpn.enable = true;
+
+# Inside configuration.nix, at the top level with other options like networking, services, etc.
 sops = {
   defaultSopsFile = ./secrets/secrets.yaml; # Path relative to configuration.nix
   defaultSopsFormat = "yaml"; # Or json, dotenv, etc.
@@ -72,25 +125,7 @@ sops = {
   # };
 };
 
-services.pia = {
-  enable = true;
-  authUserPassFile = config.sops.defaultSopsFile;
-};
-
-
-  #programs.openvpn.enable = true;
-
-
-   # Enable networking
-  networking.networkmanager.enable = true;
-  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
-  #to get pia to work, need to open the .ovpn file and change compress to comp-lzo no and completely remove <crl-verify> .... </crl-verify>
-
-  #Keyring for wifi password
-  services.gnome.gnome-keyring.enable = true;
-  environment.variables.XDG_RUNTIME_DIR = "/run/user/$UID";
-
-  # Set your time zone.
+# Set your time zone.
   time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
@@ -108,51 +143,13 @@ services.pia = {
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+# Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  #Enable polkit (policy kit)
-  security.polkit.enable = true;
-
-systemd = {
-  user.services.polkit-gnome-authentication-agent-1 = {
-    description = "polkit-gnome-authentication-agent-1";
-    wantedBy = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    after = [ "graphical-session.target" ];
-    serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
-      };
-  };
-   extraConfig = ''
-     DefaultTimeoutStopSec=10s
-   '';
-};
 
   # # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   #services.xserver.desktopManager.plasma5.enable = true;
 
-  nix = {
-    settings = {
-      auto-optimise-store = true;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-        ];
-      substituters = ["https://hyprland.cachix.org"];
-      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-  };
-#gc = {  #garbage-collect nix-store
-#automatic = true;
-    #dates = "weekly";
-    #options = "--delete-older-than 7d";
-    #};
-};
   programs.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -167,10 +164,7 @@ systemd = {
     variant = "";
   };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
+   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -186,10 +180,7 @@ systemd = {
     #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define user groups
+# Define user groups
   users.groups.plexusers = {};
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -206,12 +197,11 @@ systemd = {
 
   users.users.plex = {
     isSystemUser = true; # Plex usually runs as a system user
-    extraGroups = [ "plexusers" ]; # Add "plexusers" here
+    group = "plexusers";
+    #extraGroups = [ "plexusers" ]; # Add "plexusers" here
     # Other Plex user properties might be managed by the Plex module
   };
-  
-   # Use activationScripts to set permissions *after* the system is mounted
-  # This runs every time you rebuild your NixOS configuration.
+
 #  system.activationScripts.setMediaPermissions = ''
 #   echo "Setting permissions for /media for Plex and users..."
 #
@@ -228,15 +218,7 @@ systemd = {
 #  '';
 #
 
-  # Install firefox.
-  programs.firefox.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
+environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     neovim
@@ -257,7 +239,6 @@ systemd = {
     inputs.zen-browser.packages."${system}".specific
 ];
 
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -265,13 +246,10 @@ systemd = {
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-
 services.emacs = {
   enable = true;
 };
 
-programs.nm-applet.enable = true;
 
 programs.zsh = {
    enable = true;
@@ -285,12 +263,6 @@ programs.zsh = {
    syntaxHighlighting.enable = true;
 };
 
-
-
-
-
-
-
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
@@ -302,12 +274,6 @@ programs.zsh = {
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
 
-}
+}#End of configuration.nix!
