@@ -250,7 +250,13 @@ services.emacs = {
   enable = true;
 };
 
+#plex
+  services.plex = {
+   enable = true;
+   openFirewall = true;
 
+  };
+ 
 programs.zsh = {
    enable = true;
    enableCompletion = true;

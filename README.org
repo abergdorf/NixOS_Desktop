@@ -1,44 +1,62 @@
 #+TITLE: NixOS configuration
 #+AUTHOR: Andrew Bergdorf
+#+DATE: <2025-07-24 Thu>
 
 * TABLE OF CONTENTS :toc:
 - [[#about][ABOUT]]
 - [[#home-manager][HOME-MANAGER]]
+  - [[#startup][Startup]]
+  - [[#packages-for-home-manager][Packages for Home-Manager]]
+  - [[#user-scripts][User Scripts]]
+  - [[#home-files][Home Files]]
+  - [[#env-variables][Env-Variables]]
+  - [[#services-and-extras][Services and extras]]
 - [[#configurationnix][CONFIGURATION.NIX]]
+  - [[#startup-and-imports][Startup and imports]]
+  - [[#bootloader-and-networking][Bootloader and Networking]]
+  - [[#secrets-sops][Secrets (SOPS)]]
+  - [[#timezone-and-locale][Timezone and Locale]]
+  - [[#windowing][Windowing]]
+  - [[#sound][Sound]]
+  - [[#users][Users]]
+  - [[#activation-scripts][Activation Scripts]]
+  - [[#system-packages][System Packages]]
+  - [[#system-services-and-daemons][System Services and Daemons]]
+  - [[#system-state-version][System State version]]
 - [[#filesystemnix][FILESYSTEM.NIX]]
 - [[#flakenix][FLAKE.NIX]]
 - [[#hardware-configurationnix][HARDWARE-CONFIGURATION.NIX]]
+- [[#hyprland][HYPRLAND]]
+- [[#waybar][WAYBAR]]
 
 * ABOUT
 This is an attempt to put my nix files in this org-mode file
 
 * HOME-MANAGER
+[[file:home.nix]]
+** Startup
  This is how i'll put programs in my userspace rather than system environment.
 
+ home.state version: This value determines the Home Manager release that your configuration is
+  compatible with. This helps avoid breakage when a new Home Manager release
+  introduces backwards incompatible changes.
+
+  You should not change this value, even if you update Home Manager. If you do
+  want to update the value, then make sure to first check the Home Manager
+  release notes.
  #+begin_src nix :tangle home.nix
 { config, pkgs, ... }:
 #this is org mode tangle
 {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
+
   home.username = "andrew";
   home.homeDirectory = "/home/andrew";
 
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
-
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
+#+end_src
+** Packages for Home-Manager
+#+begin_src nix :tangle home.nix
   home.packages = with pkgs; [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
 
     #dependencies
     fd
@@ -97,80 +115,85 @@ This is an attempt to put my nix files in this org-mode file
     #ppkgs.polars
     #]))
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    ];
+#+end_src
+** User Scripts
+  It is sometimes useful to fine-tune packages, for example, by applying overrides. You can do that directly here, just don't forget the parentheses. Maybe you want to install Nerd Fonts with a limited number of fonts?
+     #+begin_src
+     (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+     #+end_src
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-  ];
+     You can also create simple shell scripts directly inside your configuration. For example, this adds a command 'my-hello' to your environment:
+     #+begin_src nix
+ (pkgs.writeShellScriptBin "my-hello" ''
+       echo "Hello, ${config.home.username}!"
+     '')
+     #+end_src
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-#  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
+** Home Files
+     Home Manager is pretty good at managing dotfiles. The primary way to manage plain files is through 'home.file'.
+      Building this configuration will create a copy of 'dotfiles/screenrc' in the Nix store. Activating the configuration will
+      then make '~/.screenrc' a symlink to the Nix store copy.
 
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-#  };
+#+begin_src nix
+     home.file = {
 
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/andrew/etc/profile.d/hm-session-vars.sh
-  #
-  home.sessionVariables = {
+     ".screenrc".source = dotfiles/screenrc;
+
+     # You can also set the file content immediately.
+     ".gradle/gradle.properties".text = ''
+       org.gradle.console=verbose
+       org.gradle.daemon.idletimeout=3600000
+     '';
+  };
+#+end_src
+** Env-Variables
+   Home Manager can also manage your environment variables through
+   'home.sessionVariables'. These will be explicitly sourced when using a
+   shell provided by Home Manager. If you don't want to manage your shell
+   through Home Manager then you have to manually source 'hm-session-vars.sh'
+   located at either
+
+    ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+
+   or
+
+    ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
+
+   or
+
+    /etc/profiles/per-user/andrew/etc/profile.d/hm-session-vars.sh
+
+  #+begin_src nix :tangle home.nix
+home.sessionVariables = {
     EDITOR = "emacs";
   };
-  programs.waybar.enable = true;
 
+  #+end_src
 
-  programs.emacs.extraPackages = epkgs: with epkgs; [
+** Services and extras
+
+  Home-manager can start services as well
+  #+begin_src nix :tangle home.nix
+   programs.waybar.enable = true;
+   programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm
   ];
 
 
 
   # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
-}
-# programs.emacs = {
-#   enable = true;
-#   };
-
- #+end_src
+   programs.home-manager.enable = true;
+} #final bracket for home.nix!
+  #+end_src
 
 * CONFIGURATION.NIX
  This is the mothership where all the files will be linked
+[[file:configuration.nix]]
+** Startup and imports
+Lets get the main configuration file going. We'll call the inputs and add imports, such as modules from other .nix files.
 
  #+begin_src nix :tangle configuration.nix
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {inputs, config, pkgs, ... }:
 #org-mode tangled
 {
@@ -180,7 +203,57 @@ This is an attempt to put my nix files in this org-mode file
       ./filesystem.nix
     ];
 
-  # Bootloader.
+   nix = {
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        ];
+      substituters = ["https://hyprland.cachix.org"];
+      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  };
+#gc = {  #garbage-collect nix-store
+#automatic = true;
+    #dates = "weekly";
+    #options = "--delete-older-than 7d";
+    #};
+};
+   # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+
+  #Enable polkit (policy kit)
+  security.polkit.enable = true;
+
+systemd = {
+  user.services.polkit-gnome-authentication-agent-1 = {
+    description = "polkit-gnome-authentication-agent-1";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+  };
+   extraConfig = ''
+     DefaultTimeoutStopSec=10s
+   '';
+};
+
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+
+#+end_src
+
+** Bootloader and Networking
+#+begin_src nix :tangle configuration.nix
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -199,14 +272,32 @@ This is an attempt to put my nix files in this org-mode file
      settings.PasswordAuthentication = false;
    };
 
-  #plex
-  services.plex = {
-   enable = true;
-   openFirewall = true;
+   # Enable networking
+  networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
 
-  };
+  programs.nm-applet.enable = true;
 
-  # Inside configuration.nix, at the top level with other options like networking, services, etc.
+  #Keyring for wifi password
+  services.gnome.gnome-keyring.enable = true;
+  environment.variables.XDG_RUNTIME_DIR = "/run/user/$UID";
+
+  #to get pia to work, need to open the .ovpn file and change compress to comp-lzo no and completely remove <crl-verify> .... </crl-verify>
+  services.pia = {
+  enable = true;
+  authUserPassFile = config.sops.defaultSopsFile;
+};
+
+
+  #programs.openvpn.enable = true;
+
+
+
+#+end_src
+
+** Secrets (SOPS)
+#+begin_src nix :tangle configuration.nix
+# Inside configuration.nix, at the top level with other options like networking, services, etc.
 sops = {
   defaultSopsFile = ./secrets/secrets.yaml; # Path relative to configuration.nix
   defaultSopsFormat = "yaml"; # Or json, dotenv, etc.
@@ -241,25 +332,11 @@ sops = {
   # };
 };
 
-services.pia = {
-  enable = true;
-  authUserPassFile = config.sops.defaultSopsFile;
-};
+#+end_src
 
-
-  #programs.openvpn.enable = true;
-
-
-   # Enable networking
-  networking.networkmanager.enable = true;
-  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn];
-  #to get pia to work, need to open the .ovpn file and change compress to comp-lzo no and completely remove <crl-verify> .... </crl-verify>
-
-  #Keyring for wifi password
-  services.gnome.gnome-keyring.enable = true;
-  environment.variables.XDG_RUNTIME_DIR = "/run/user/$UID";
-
-  # Set your time zone.
+** Timezone and Locale
+#+begin_src nix :tangle configuration.nix
+# Set your time zone.
   time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
@@ -277,51 +354,17 @@ services.pia = {
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+#+end_src
+
+** Windowing
+#+begin_src nix :tangle configuration.nix
+# Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  #Enable polkit (policy kit)
-  security.polkit.enable = true;
-
-systemd = {
-  user.services.polkit-gnome-authentication-agent-1 = {
-    description = "polkit-gnome-authentication-agent-1";
-    wantedBy = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    after = [ "graphical-session.target" ];
-    serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
-      };
-  };
-   extraConfig = ''
-     DefaultTimeoutStopSec=10s
-   '';
-};
 
   # # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   #services.xserver.desktopManager.plasma5.enable = true;
 
-  nix = {
-    settings = {
-      auto-optimise-store = true;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-        ];
-      substituters = ["https://hyprland.cachix.org"];
-      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-  };
-#gc = {  #garbage-collect nix-store
-#automatic = true;
-    #dates = "weekly";
-    #options = "--delete-older-than 7d";
-    #};
-};
   programs.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -336,10 +379,12 @@ systemd = {
     variant = "";
   };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
 
-  # Enable sound with pipewire.
+
+#+end_src
+** Sound
+#+begin_src nix :tangle configuration.nix
+   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -355,10 +400,12 @@ systemd = {
     #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
-  # Define user groups
+#+end_src
+
+** Users
+#+begin_src nix :tangle configuration.nix
+# Define user groups
   users.groups.plexusers = {};
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -375,12 +422,20 @@ systemd = {
 
   users.users.plex = {
     isSystemUser = true; # Plex usually runs as a system user
-    extraGroups = [ "plexusers" ]; # Add "plexusers" here
+    group = "plexusers";
+    #extraGroups = [ "plexusers" ]; # Add "plexusers" here
     # Other Plex user properties might be managed by the Plex module
   };
-  
-   # Use activationScripts to set permissions *after* the system is mounted
-  # This runs every time you rebuild your NixOS configuration.
+
+#+end_src
+
+** Activation Scripts
+
+   Use activationScripts to set permissions *after* the system is mounted
+   This runs every time you rebuild your NixOS configuration.
+   (Not currently using this since a kernel panic. Unsure if this was related or since i accidentally did nix-channell update)
+
+  #+begin_src nix :tangle configuration.nix
 #  system.activationScripts.setMediaPermissions = ''
 #   echo "Setting permissions for /media for Plex and users..."
 #
@@ -397,15 +452,13 @@ systemd = {
 #  '';
 #
 
-  # Install firefox.
-  programs.firefox.enable = true;
+  #+end_src
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+** System Packages
+Install packages that are system wide. Things like neovim wget emacs git
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
+#+begin_src nix :tangle configuration.nix
+environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     neovim
@@ -426,7 +479,11 @@ systemd = {
     inputs.zen-browser.packages."${system}".specific
 ];
 
+#+end_src
 
+** System Services and Daemons
+
+#+begin_src nix :tangle configuration.nix
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -434,13 +491,16 @@ systemd = {
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-
 services.emacs = {
   enable = true;
 };
 
-programs.nm-applet.enable = true;
+#plex
+  services.plex = {
+   enable = true;
+   openFirewall = true;
+
+  };
 
 programs.zsh = {
    enable = true;
@@ -454,12 +514,6 @@ programs.zsh = {
    syntaxHighlighting.enable = true;
 };
 
-
-
-
-
-
-
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
@@ -470,19 +524,25 @@ programs.zsh = {
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+#+end_src
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+** System State version
+Probably won't edit this
+  This value determines the NixOS release from which the default
+  settings for stateful data, like file locations and database versions
+  on your system were taken. It‘s perfectly fine and recommended to leave
+  this value at the release version of the first install of this system.
+  Before changing this value read the documentation for this option
+  (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+
+#+begin_src nix :tangle configuration.nix
+
   system.stateVersion = "24.11"; # Did you read the comment?
 
-}
+}#End of configuration.nix!
 
+#+end_src
 
- #+end_src
 * FILESYSTEM.NIX
 #+begin_src nix :tangle filesystem.nix
 { config, pkgs, ... }:
@@ -591,3 +651,7 @@ programs.zsh = {
 
 
  #+end_src
+* HYPRLAND
+**TODO copy in hyprland settings and link them to a dotfiles repo
+* WAYBAR
+**TODO same as hyprland; copy in waybar config and link them to dotfiles repo
