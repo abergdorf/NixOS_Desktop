@@ -181,13 +181,13 @@ sops = {
   };
 
 # Define user groups
-  users.groups.plexusers = {};
+  users.groups.plex = {};
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.andrew = {
     isNormalUser = true;
     description = "Andrew";
-    extraGroups = [ "networkmanager" "wheel" "plexusers"];
+    extraGroups = [ "networkmanager" "wheel" "plex"];
     packages = with pkgs; [
     #  kate
     #  thunderbird
@@ -197,7 +197,7 @@ sops = {
 
   users.users.plex = {
     isSystemUser = true; # Plex usually runs as a system user
-    group = "plexusers";
+    group = "plex";
     #extraGroups = [ "plexusers" ]; # Add "plexusers" here
     # Other Plex user properties might be managed by the Plex module
   };
