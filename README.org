@@ -131,7 +131,7 @@ This is an attempt to put my nix files in this org-mode file
     rofi-network-manager
     rofi-file-browser
     wttrbar
-    waybar
+    #waybar
     waypaper
     xfce.thunar
     kdePackages.ark
@@ -521,6 +521,7 @@ environment.systemPackages = with pkgs; [
     polkit
     polkit_gnome
 
+    waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
 ];
 

@@ -236,6 +236,7 @@ environment.systemPackages = with pkgs; [
     polkit
     polkit_gnome
 
+    waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
 ];
 
@@ -256,7 +257,7 @@ services.emacs = {
    openFirewall = true;
 
   };
- 
+
 programs.zsh = {
    enable = true;
    enableCompletion = true;

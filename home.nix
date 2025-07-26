@@ -37,7 +37,7 @@
     rofi-network-manager
     rofi-file-browser
     wttrbar
-    waybar
+    #waybar
     waypaper
     xfce.thunar
     kdePackages.ark
