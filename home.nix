@@ -23,6 +23,16 @@
     openvpn
     gh
 
+    #fonts and icons
+    bibata-cursors
+    hicolor-icon-theme
+    adwaita-icon-theme
+    adwaita-qt
+    adwaita-fonts
+    nerd-fonts.fira-code
+    nerdfix
+
+
     #social
     telegram-desktop
     discord
@@ -36,12 +46,20 @@
     rofi
     rofi-network-manager
     rofi-file-browser
+    libnma-gtk4
     wttrbar
-    #waybar
+    swaylock
+    swayidle
+    nwg-look
+    hyprshot
+    wl-clipboard
+    cliphist
     waypaper
     xfce.thunar
     kdePackages.ark
     kdePackages.dolphin
+    kdePackages.qt6ct
+    libsForQt5.qt5ct
 
     obsidian
     obs-studio
@@ -68,15 +86,27 @@
 
     ];
 
+qt = {
+  enable = true;
+  platformTheme.name = "qt6ct";
+};
+
+gtk = {
+  enable = true;
+  iconTheme = {
+    name = "Adwaita-dark";
+  };
+};
+
 home.sessionVariables = {
     EDITOR = "emacs";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 
    programs.waybar.enable = true;
    programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm
   ];
-
 
 
   # Let Home Manager install and manage itself.

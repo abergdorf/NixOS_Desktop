@@ -117,6 +117,16 @@ This is an attempt to put my nix files in this org-mode file
     openvpn
     gh
 
+    #fonts and icons
+    bibata-cursors
+    hicolor-icon-theme
+    adwaita-icon-theme
+    adwaita-qt
+    adwaita-fonts
+    nerd-fonts.fira-code
+    nerdfix
+
+
     #social
     telegram-desktop
     discord
@@ -130,12 +140,20 @@ This is an attempt to put my nix files in this org-mode file
     rofi
     rofi-network-manager
     rofi-file-browser
+    libnma-gtk4
     wttrbar
-    #waybar
+    swaylock
+    swayidle
+    nwg-look
+    hyprshot
+    wl-clipboard
+    cliphist
     waypaper
     xfce.thunar
     kdePackages.ark
     kdePackages.dolphin
+    kdePackages.qt6ct
+    libsForQt5.qt5ct
 
     obsidian
     obs-studio
@@ -161,6 +179,19 @@ This is an attempt to put my nix files in this org-mode file
     #]))
 
     ];
+
+qt = {
+  enable = true;
+  platformTheme.name = "qt6ct";
+};
+
+gtk = {
+  enable = true;
+  iconTheme = {
+    name = "Adwaita-dark";
+  };
+};
+
 #+end_src
 ** User Scripts
   It is sometimes useful to fine-tune packages, for example, by applying overrides. You can do that directly here, just don't forget the parentheses. Maybe you want to install Nerd Fonts with a limited number of fonts?
@@ -212,6 +243,7 @@ This is an attempt to put my nix files in this org-mode file
   #+begin_src nix :tangle home.nix
 home.sessionVariables = {
     EDITOR = "emacs";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 
   #+end_src
@@ -224,7 +256,6 @@ home.sessionVariables = {
    programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm
   ];
-
 
 
   # Let Home Manager install and manage itself.
@@ -521,6 +552,7 @@ environment.systemPackages = with pkgs; [
     polkit
     polkit_gnome
 
+    python3
     waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
 ];
@@ -560,6 +592,7 @@ programs.zsh = {
    syntaxHighlighting.enable = true;
 };
 
+home-manager.backupFileExtension = "backup";
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.

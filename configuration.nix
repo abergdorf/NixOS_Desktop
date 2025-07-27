@@ -236,6 +236,7 @@ environment.systemPackages = with pkgs; [
     polkit
     polkit_gnome
 
+    python3
     waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
 ];
@@ -270,6 +271,7 @@ programs.zsh = {
    syntaxHighlighting.enable = true;
 };
 
+home-manager.backupFileExtension = "backup";
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
