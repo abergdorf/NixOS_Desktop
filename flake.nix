@@ -35,7 +35,7 @@
 
           ({
             nixpkgs.overlays = [
-              (import ./overlays/sddm-theme.nix)
+              (import ./overlays/sddm-themes.nix)
             ];
           })
         ];
