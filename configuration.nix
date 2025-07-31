@@ -146,9 +146,15 @@ sops = {
 # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+
   # # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    theme = "sugar-dark";
+    wayland.enable = true;
+    };
   #services.xserver.desktopManager.plasma5.enable = true;
+
 
   programs.hyprland = {
     enable = true;
@@ -239,6 +245,9 @@ environment.systemPackages = with pkgs; [
     python3
     waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
+    catppuccin-sddm
+    sddm-sugar-dark
+
 ];
 
   # Some programs need SUID wrappers, can be configured further or are

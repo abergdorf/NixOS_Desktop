@@ -17,7 +17,7 @@
   - [[#bootloader-and-networking][Bootloader and Networking]]
   - [[#secrets-sops][Secrets (SOPS)]]
   - [[#timezone-and-locale][Timezone and Locale]]
-  - [[#windowing][Windowing]]
+  - [[#windowing-and-sddm][Windowing and SDDM]]
   - [[#sound][Sound]]
   - [[#users][Users]]
   - [[#activation-scripts][Activation Scripts]]
@@ -70,11 +70,18 @@ This is an attempt to put my nix files in this org-mode file
           }
           sops-nix.nixosModules.sops
           pia.nixosModules."x86_64-linux".default
+
+          ({
+            nixpkgs.overlays = [
+              (import ./overlays/sddm-theme.nix)
+            ];
+          })
         ];
       };
     };
   };
 }
+
 
  #+end_src
 * HOME-MANAGER
@@ -154,6 +161,10 @@ This is an attempt to put my nix files in this org-mode file
     kdePackages.dolphin
     kdePackages.qt6ct
     libsForQt5.qt5ct
+    kdePackages.sddm-kcm
+    kdePackages.qtvirtualkeyboard
+    kdePackages.qtmultimedia
+    kdePackages.qtsvg
 
     obsidian
     obs-studio
@@ -432,14 +443,20 @@ sops = {
 
 #+end_src
 
-** Windowing
+** Windowing and SDDM
 #+begin_src nix :tangle configuration.nix
 # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+
   # # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    theme = "sugar-dark";
+    wayland.enable = true;
+    };
   #services.xserver.desktopManager.plasma5.enable = true;
+
 
   programs.hyprland = {
     enable = true;
@@ -555,6 +572,9 @@ environment.systemPackages = with pkgs; [
     python3
     waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
+    catppuccin-sddm
+    sddm-sugar-dark
+
 ];
 
 #+end_src

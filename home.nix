@@ -60,6 +60,10 @@
     kdePackages.dolphin
     kdePackages.qt6ct
     libsForQt5.qt5ct
+    kdePackages.sddm-kcm
+    kdePackages.qtvirtualkeyboard
+    kdePackages.qtmultimedia
+    kdePackages.qtsvg
 
     obsidian
     obs-studio
