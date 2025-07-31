@@ -48,6 +48,7 @@
     rofi-file-browser
     libnma-gtk4
     wttrbar
+    wlogout
     swaylock
     swayidle
     nwg-look
@@ -64,6 +65,7 @@
     kdePackages.qtvirtualkeyboard
     kdePackages.qtmultimedia
     kdePackages.qtsvg
+    libsForQt5.qt5.qtgraphicaleffects
 
     obsidian
     obs-studio

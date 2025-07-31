@@ -149,6 +149,7 @@ This is an attempt to put my nix files in this org-mode file
     rofi-file-browser
     libnma-gtk4
     wttrbar
+    wlogout
     swaylock
     swayidle
     nwg-look
@@ -165,6 +166,7 @@ This is an attempt to put my nix files in this org-mode file
     kdePackages.qtvirtualkeyboard
     kdePackages.qtmultimedia
     kdePackages.qtsvg
+    libsForQt5.qt5.qtgraphicaleffects
 
     obsidian
     obs-studio
