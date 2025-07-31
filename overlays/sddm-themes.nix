@@ -9,7 +9,7 @@ self: super: {
       rev = "v${version}";
       # The sha256 you provided is likely outdated.
       # Replace the hash below with the one Nix gives you after a failed build.
-      sha256 = "sha256-ceb2c455663429be03ba62d9f898c571650ef7fe=";
+      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
     };
 
     dontBuild = true;
