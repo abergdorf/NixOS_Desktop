@@ -167,6 +167,9 @@ This is an attempt to put my nix files in this org-mode file
     kdePackages.qtmultimedia
     kdePackages.qtsvg
     libsForQt5.qt5.qtgraphicaleffects
+    libsForQt5.qt5.qtquickcontrols2
+    libsForQt5.qt5.qtsvg
+
 
     obsidian
     obs-studio
@@ -302,11 +305,11 @@ Lets get the main configuration file going. We'll call the inputs and add import
       substituters = ["https://hyprland.cachix.org"];
       trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
-#gc = {  #garbage-collect nix-store
-#automatic = true;
-    #dates = "weekly";
-    #options = "--delete-older-than 7d";
-    #};
+gc = {  #garbage-collect nix-store
+automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+    };
 };
    # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
