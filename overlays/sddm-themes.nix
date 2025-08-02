@@ -29,3 +29,34 @@ self: super: {
     };
   };
 }
+
+{
+  sddm-astronaut-theme= super.stdenv.mkDerivation rec{
+    pname = "sddm-astronaut-theme";
+    version = "1.1.1"; # Check the GitHub repo for the latest version tag
+
+    src = super.fetchFromGitHub {
+      owner = "keyitdev";
+      repo = "sddm-astronaut-theme";
+      rev = "v${version}";
+      # Use the placeholder and let Nix tell you the correct hash on the next build
+      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    };
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/sddm/themes
+      # Copy ALL directories from the src/ folder
+      cp -aR $src $out/share/sddm/themes/sddm-astronaut-theme
+      runHook postInstall
+    '';
+
+    meta = with super.lib; {
+      description = "SDDM-Astronaut themes";
+      homepage = "https://github.com/Keyitdev/sddm-astronaut-theme";
+      license = licenses.gpl3Only;
+    };
+  };
+}

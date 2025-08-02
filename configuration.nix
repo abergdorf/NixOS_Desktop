@@ -247,6 +247,7 @@ environment.systemPackages = with pkgs; [
     inputs.zen-browser.packages."${system}".specific
     catppuccin-sddm
     sddm-sugar-dark
+    sddm-astronaut-theme
 
 ];
 
