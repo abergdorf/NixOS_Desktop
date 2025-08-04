@@ -143,16 +143,27 @@ sops = {
     LC_TIME = "en_US.UTF-8";
   };
 
+  libinput.enable = true;
+
 # Enable the X11 windowing system.
   services.xserver.enable = true;
 
 
   # # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm = {
-    enable = true;
-    theme = "sugar-dark";
-    wayland.enable = true;
-    };
+  enable = true;
+  wayland.enable = true;
+  package = pkgs.kdePackages.sddm;
+  theme = "catppuccin-mocha";
+  extraPackages = with pkgs.kdePackages; [
+    breeze-icons
+    kirigami
+    plasma5support
+    qtsvg
+    qtvirtualkeyboard
+  ];
+};
+
   #services.xserver.desktopManager.plasma5.enable = true;
 
 
@@ -241,13 +252,35 @@ environment.systemPackages = with pkgs; [
     seahorse
     polkit
     polkit_gnome
+    libinput
+
+    kdePackages.sddm
+    kdePackages.ark
+    kdePackages.dolphin
+    kdePackages.qt6ct
+    kdePackages.sddm-kcm
+    kdePackages.qtvirtualkeyboard
+    kdePackages.qtmultimedia
+    kdePackages.qtsvg
+    kdePackages.qtdeclarative
+
+
+
+
+#   libsForQt5.qt5.qtgraphicaleffects
+#   libsForQt5.qt5ct
+#   libsForQt5.qt5.qtquickcontrols2
+#   libsForQt5.qt5.qtsvg
+#   libsForQt5.qt5.qtmultimedia
+
+
 
     python3
     waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific
     catppuccin-sddm
     sddm-sugar-dark
-    sddm-astronaut-theme
+    sddm-astronaut
 
 ];
 

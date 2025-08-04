@@ -1,4 +1,6 @@
-self: super: {
+self: super:
+{
+  #--------theme1-----------------
   sddm-sugar-dark = super.stdenv.mkDerivation rec {
     pname = "sddm-sugar-dark-theme";
     version = "1.2";
@@ -28,19 +30,17 @@ self: super: {
       platforms = platforms.all;
     };
   };
-}
-
-{
+  #--------theme2------------------
   sddm-astronaut-theme= super.stdenv.mkDerivation rec{
     pname = "sddm-astronaut-theme";
-    version = "1.1.1"; # Check the GitHub repo for the latest version tag
+    version = "unstable 25-06-21";
 
     src = super.fetchFromGitHub {
       owner = "keyitdev";
       repo = "sddm-astronaut-theme";
-      rev = "v${version}";
+      rev = "3ef9f511fd072ff3dbb6eb3c1c499a71f338967e";
       # Use the placeholder and let Nix tell you the correct hash on the next build
-      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      sha256 = "sha256-33CzZ4vK1dicVzICbudk8gSRC/MExG+WnrE9wIWET14=";
     };
 
     dontBuild = true;
@@ -50,6 +50,8 @@ self: super: {
       mkdir -p $out/share/sddm/themes
       # Copy ALL directories from the src/ folder
       cp -aR $src $out/share/sddm/themes/sddm-astronaut-theme
+      substituteInPlace $out/share/sddm/themes/sddm-astronaut-theme/metadata.desktop \
+        --replace "ConfigFile=Themes/astronaut.conf" "ConfigFile=Themes/pixel_sakura.conf"
       runHook postInstall
     '';
 
@@ -59,4 +61,6 @@ self: super: {
       license = licenses.gpl3Only;
     };
   };
+  #-------------
 }
+

@@ -57,17 +57,7 @@
     cliphist
     waypaper
     xfce.thunar
-    kdePackages.ark
-    kdePackages.dolphin
-    kdePackages.qt6ct
-    libsForQt5.qt5ct
-    kdePackages.sddm-kcm
-    kdePackages.qtvirtualkeyboard
-    kdePackages.qtmultimedia
-    kdePackages.qtsvg
-    libsForQt5.qt5.qtgraphicaleffects
-    libsForQt5.qt5.qtquickcontrols2
-    libsForQt5.qt5.qtsvg
+
 
 
     obsidian
