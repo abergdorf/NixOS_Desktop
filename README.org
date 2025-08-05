@@ -436,7 +436,7 @@ sops = {
     LC_TIME = "en_US.UTF-8";
   };
 
-  libinput.enable = true;
+  services.libinput.enable = true;
 #+end_src
 
 ** Windowing and SDDM

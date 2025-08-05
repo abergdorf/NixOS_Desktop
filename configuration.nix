@@ -143,7 +143,7 @@ sops = {
     LC_TIME = "en_US.UTF-8";
   };
 
-  libinput.enable = true;
+  services.libinput.enable = true;
 
 # Enable the X11 windowing system.
   services.xserver.enable = true;
