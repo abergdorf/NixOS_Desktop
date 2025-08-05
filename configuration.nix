@@ -143,8 +143,6 @@ sops = {
     LC_TIME = "en_US.UTF-8";
   };
 
-  services.libinput.enable = true;
-
 # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -301,6 +299,9 @@ services.emacs = {
    openFirewall = true;
 
   };
+
+#libinput is newer, allows faster response time between keyboard typing
+services.libinput.enable = true;
 
 programs.zsh = {
    enable = true;
