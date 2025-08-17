@@ -1,7 +1,7 @@
 self: super:
 
 {
- plex = super.plex.overrideAttrs (oldAttrs: rec {
+ plexRaw = super.plexRaw.overrideAttrs (oldAttrs: rec {
     version = "1.42.1.10060-4e8b05daf";
 
     # The new source URL
@@ -14,5 +14,6 @@ self: super:
     # Update other attributes if necessary (e.g., source hash)
     # Be sure to replace the hash with the one from Step 1.
     # The 'meta' attributes might also need updating if there are significant changes.
+    pname = "plexmediaserver";
   });
 }
