@@ -10,7 +10,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
    # zen-browser.url = "github:MarceColl/zen-browser-flake";
-    zen-browser.url = "path:/home/andrew/nix-flakes/flake.nix";
+    zen-browser.url = "github:abergdorf/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     pia.url = "github:Fuwn/pia.nix";
     pia.inputs.nixpkgs.follows = "nixpkgs";

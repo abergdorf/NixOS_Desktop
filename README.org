@@ -26,6 +26,8 @@
   - [[#system-state-version][System State version]]
 - [[#filesystemnix][FILESYSTEM.NIX]]
 - [[#zennix][ZEN.NIX]]
+  - [[#flakenix-1][flake.nix]]
+  - [[#zendesktop][zen.desktop]]
 - [[#hardware-configurationnix][HARDWARE-CONFIGURATION.NIX]]
 - [[#hyprland][HYPRLAND]]
   - [[#monitors][Monitors]]
@@ -57,7 +59,7 @@ This is an attempt to put my nix files in this org-mode file
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
    # zen-browser.url = "github:MarceColl/zen-browser-flake";
-    zen-browser.url = "path:/home/andrew/nix-flakes/flake.nix";
+    zen-browser.url = "github:abergdorf/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     pia.url = "github:Fuwn/pia.nix";
     pia.inputs.nixpkgs.follows = "nixpkgs";
@@ -288,7 +290,7 @@ home.sessionVariables = {
 Lets get the main configuration file going. We'll call the inputs and add imports, such as modules from other .nix files.
 
  #+begin_src nix :tangle configuration.nix
-{inputs, config, pkgs, ... }:
+{inputs, config, pkgs, zen-browser, ... }:
 #org-mode tangled
 {
   imports =
@@ -610,7 +612,8 @@ environment.systemPackages = with pkgs; [
 
     python3
     waybar #some weirdness about having it in home-manager
-    inputs.zen-browser.packages."${system}".specific
+    #inputs.zen-browser.packages."${system}".specific
+    zen-browser.packages.${pkgs.system}.zenBrowser
     catppuccin-sddm
     sddm-sugar-dark
     sddm-astronaut
@@ -724,7 +727,8 @@ Do not change this value unless you have manually inspected all the changes it w
 * ZEN.NIX
 Not really sure what the right way to go about this is, but i'm going to take the flake.nix from MarceColl and modify it to have modern zen.
 I want to ultimately have it auto-update so i don't get that stupid notification every time
-#+begin_src nix :tangle ../nix-flakes/flake.nix
+** flake.nix
+#+begin_src nix :tangle ../nix-flakes/zen-browser/flake.nix
 {
   description = "Zen Browser";
 
@@ -816,6 +820,36 @@ I want to ultimately have it auto-update so i don't get that stupid notification
       defaultPackage.${system} = zenBrowser;
     };
 }
+
+#+end_src
+** zen.desktop
+#+begin_src desktop
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Zen Browser
+Exec=zen %u
+Icon=zen
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
+StartupWMClass=zen-alpha
+Categories=Network;WebBrowser;
+StartupNotify=true
+Terminal=false
+X-MultipleArgs=false
+Keywords=Internet;WWW;Browser;Web;Explorer;
+Actions=new-window;new-private-window;profilemanager;
+
+[Desktop Action new-window]
+Name=Open a New Window
+Exec=zen %u
+
+[Desktop Action new-private-window]
+Name=Open a New Private Window
+Exec=zen --private-window %u
+
+[Desktop Action profilemanager]
+Name=Open the Profile Manager
+Exec=zen --ProfileManager %u
 
 #+end_src
 * HARDWARE-CONFIGURATION.NIX

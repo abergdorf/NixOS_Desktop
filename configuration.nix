@@ -1,4 +1,4 @@
-{inputs, config, pkgs, ... }:
+{inputs, config, pkgs, zen-browser, ... }:
 #org-mode tangled
 {
   imports =
@@ -276,7 +276,8 @@ environment.systemPackages = with pkgs; [
 
     python3
     waybar #some weirdness about having it in home-manager
-    inputs.zen-browser.packages."${system}".specific
+    #inputs.zen-browser.packages."${system}".specific
+    zen-browser.packages.${pkgs.system}.zenBrowser
     catppuccin-sddm
     sddm-sugar-dark
     sddm-astronaut
