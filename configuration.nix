@@ -273,6 +273,7 @@ environment.systemPackages = with pkgs; [
 
 
 
+
     python3
     waybar #some weirdness about having it in home-manager
     inputs.zen-browser.packages."${system}".specific

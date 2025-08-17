@@ -183,7 +183,6 @@ This is an attempt to put my nix files in this org-mode file
     ffmpeg
     yt-dlp
     syncplay
-    plexmediaserver
 
 
     #python
@@ -602,6 +601,7 @@ environment.systemPackages = with pkgs; [
 #   libsForQt5.qt5.qtquickcontrols2
 #   libsForQt5.qt5.qtsvg
 #   libsForQt5.qt5.qtmultimedia
+
 
 
 

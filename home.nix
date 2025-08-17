@@ -72,7 +72,6 @@
     ffmpeg
     yt-dlp
     syncplay
-    plexmediaserver
 
 
     #python
