@@ -44,9 +44,9 @@ systemd = {
         TimeoutStopSec = 10;
       };
   };
-   extraConfig = ''
-     DefaultTimeoutStopSec=10s
-   '';
+  settings.Manager = {
+     DefaultTimeoutStopSec=10;
+   };
 };
 
 

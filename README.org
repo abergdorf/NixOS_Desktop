@@ -27,6 +27,14 @@
 - [[#filesystemnix][FILESYSTEM.NIX]]
 - [[#hardware-configurationnix][HARDWARE-CONFIGURATION.NIX]]
 - [[#hyprland][HYPRLAND]]
+  - [[#monitors][Monitors]]
+  - [[#programs-and-aliases][Programs and aliases]]
+  - [[#autostart][Autostart]]
+  - [[#environment-variables][ENVIRONMENT VARIABLES]]
+  - [[#look-and-feel][LOOK AND FEEL]]
+  - [[#input][INPUT]]
+  - [[#keybindings][KEYBINDINGS]]
+  - [[#windows-and-workspaces][WINDOWS AND WORKSPACES]]
 - [[#waybar][WAYBAR]]
 
 * ABOUT
@@ -71,11 +79,13 @@ This is an attempt to put my nix files in this org-mode file
           sops-nix.nixosModules.sops
           pia.nixosModules."x86_64-linux".default
 
-        # ({
-        #   nixpkgs.overlays = [
-        #     (import ./overlays/sddm-themes.nix)
-        #   ];
-        # })
+         ({
+           nixpkgs.overlays = [
+           # (import ./overlays/sddm-themes.nix)
+
+             (import ./overlays/plex.nix)
+           ];
+         })
         ];
       };
     };
@@ -171,10 +181,9 @@ This is an attempt to put my nix files in this org-mode file
     #video plugins
     mpv
     ffmpeg
-    #madvr #maybe not needed?
-
     yt-dlp
     syncplay
+    plexmediaserver
 
 
     #python
@@ -323,9 +332,9 @@ systemd = {
         TimeoutStopSec = 10;
       };
   };
-   extraConfig = ''
-     DefaultTimeoutStopSec=10s
-   '';
+  settings.Manager = {
+     DefaultTimeoutStopSec=10;
+   };
 };
 
 
@@ -756,6 +765,335 @@ Do not change this value unless you have manually inspected all the changes it w
 
  #+end_src
 * HYPRLAND
-**TODO copy in hyprland settings and link them to a dotfiles repo
+Hyprland config contains several parts. In JaKooLit's version, there are many many modules and everything is sourced to the hyprland.conf.
+I feel like having the org file with sections will make more sense for me with everything in one file.
+** Monitors
+################
+### MONITORS ###
+################
+
+# See https://wiki.hyprland.org/Configuring/Monitors/
+# monitor=,1920x1080@120,auto,auto
+
+
+#+begin_src conf
+
+monitor=,3840x2160@30,auto,1.5
+
+
+#+end_src
+
+** Programs and aliases
+
+###################
+### MY PROGRAMS ###
+###################
+
+# See https://wiki.hyprland.org/Configuring/Keywords/
+#+begin_src conf
+$terminal = ghostty
+$fileManager = dolphin
+$menu = rofi -show drun
+$edit = emacsclient -c -a 'emacs'
+$browser = zen
+
+#+end_src
+# Set programs that you use
+** Autostart
+
+#################
+### AUTOSTART ###
+#################
+
+ Autostart necessary processes (like notifications daemons, status bars, etc.)
+ Or execute your favorite apps at launch like this:
+#+begin_src conf
+exec-once = $terminal
+exec-once = $edit
+exec-once = $browser
+exec-once = nm-applet --indicator &
+# exec-once = waybar & hyprpaper & firefox
+exec-once = sleep 1 && waybar
+exec-once = /usr/libexec/xdg-desktop-portal-hyprland
+exec-once = polkit-agent-helper-1
+exec-once = systemctl start --user polkit-gnome-authentication-agent-1
+
+#+end_src
+** ENVIRONMENT VARIABLES
+
+#############################
+### ENVIRONMENT VARIABLES ###
+#############################
+
+# See https://wiki.hyprland.org/Configuring/Environment-variables/
+#+begin_src conf
+env = XCURSOR_THEME,Bibata-Modern-Ice
+env = XCURSOR_SIZE,24
+env = HYPRCURSOR_SIZE,24
+env = HYPRCURSOR_THEME,Bibata-Modern-Ice
+env = GTK_THEME,adwaita:dark
+env = XDG_CURRENT_DESKTOP,Hyprland
+env = QT_QPA_PLATFORMTHEME,qt6ct
+
+exec-once = gsettings set org.gnome.desktop.interface gtk-theme "YOUR_DARK_GTK3_THEME"   # for GTK3 apps
+exec-once = gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"   # for GTK4 apps
+
+#+end_src
+** LOOK AND FEEL
+
+#####################
+### LOOK AND FEEL ###
+#####################
+
+# Refer to https://wiki.hyprland.org/Configuring/Variables/
+
+# https://wiki.hyprland.org/Configuring/Variables/#general
+#+begin_src conf
+general {
+    gaps_in = 5
+    gaps_out = 20
+
+    border_size = 2
+
+    # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
+    col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+    col.inactive_border = rgba(595959aa)
+
+    # Set to true enable resizing windows by clicking and dragging on borders and gaps
+    resize_on_border = false
+
+    # Please see https://wiki.hyprland.org/Configuring/Tearing/ before you turn this on
+    allow_tearing = false
+
+    layout = dwindle
+}
+
+# https://wiki.hyprland.org/Configuring/Variables/#decoration
+decoration {
+    rounding = 10
+    rounding_power = 2
+
+    # Change transparency of focused and unfocused windows
+    active_opacity = 1.0
+    inactive_opacity = 1.0
+
+    shadow {
+        enabled = true
+        range = 4
+        render_power = 3
+        color = rgba(1a1a1aee)
+    }
+
+    # https://wiki.hyprland.org/Configuring/Variables/#blur
+    blur {
+        enabled = true
+        size = 3
+        passes = 1
+
+        vibrancy = 0.1696
+    }
+}
+
+# https://wiki.hyprland.org/Configuring/Variables/#animations
+animations {
+    enabled = yes, please :)
+
+    # Default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
+
+    bezier = easeOutQuint,0.23,1,0.32,1
+    bezier = easeInOutCubic,0.65,0.05,0.36,1
+    bezier = linear,0,0,1,1
+    bezier = almostLinear,0.5,0.5,0.75,1.0
+    bezier = quick,0.15,0,0.1,1
+
+    animation = global, 1, 10, default
+    animation = border, 1, 5.39, easeOutQuint
+    animation = windows, 1, 4.79, easeOutQuint
+    animation = windowsIn, 1, 4.1, easeOutQuint, popin 87%
+    animation = windowsOut, 1, 1.49, linear, popin 87%
+    animation = fadeIn, 1, 1.73, almostLinear
+    animation = fadeOut, 1, 1.46, almostLinear
+    animation = fade, 1, 3.03, quick
+    animation = layers, 1, 3.81, easeOutQuint
+    animation = layersIn, 1, 4, easeOutQuint, fade
+    animation = layersOut, 1, 1.5, linear, fade
+    animation = fadeLayersIn, 1, 1.79, almostLinear
+    animation = fadeLayersOut, 1, 1.39, almostLinear
+    animation = workspaces, 1, 1.94, almostLinear, fade
+    animation = workspacesIn, 1, 1.21, almostLinear, fade
+    animation = workspacesOut, 1, 1.94, almostLinear, fade
+}
+
+# Ref https://wiki.hyprland.org/Configuring/Workspace-Rules/
+# "Smart gaps" / "No gaps when only"
+# uncomment all if you wish to use that.
+# workspace = w[tv1], gapsout:0, gapsin:0
+# workspace = f[1], gapsout:0, gapsin:0
+# windowrule = bordersize 0, floating:0, onworkspace:w[tv1]
+# windowrule = rounding 0, floating:0, onworkspace:w[tv1]
+# windowrule = bordersize 0, floating:0, onworkspace:f[1]
+# windowrule = rounding 0, floating:0, onworkspace:f[1]
+
+# See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+dwindle {
+    pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+    preserve_split = true # You probably want this
+}
+
+# See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
+master {
+    new_status = master
+}
+
+# https://wiki.hyprland.org/Configuring/Variables/#misc
+misc {
+    force_default_wallpaper = -1 # Set to 0 or 1 to disable the anime mascot wallpapers
+    disable_hyprland_logo = false # If true disables the random hyprland logo / anime girl background. :(
+}
+
+
+#+end_src
+** INPUT
+
+#############
+### INPUT ###
+#############
+
+# https://wiki.hyprland.org/Configuring/Variables/#input
+#+begin_src conf
+input {
+    kb_layout = us
+    kb_variant =
+    kb_model =
+    kb_options =
+    kb_rules =
+
+    follow_mouse = 1
+
+    sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
+
+    touchpad {
+        natural_scroll = false
+    }
+}
+
+# https://wiki.hyprland.org/Configuring/Variables/#gestures
+gestures {
+    workspace_swipe = true
+}
+
+# Example per-device config
+# See https://wiki.hyprland.org/Configuring/Keywords/#per-device-input-configs for more
+device {
+    name = epic-mouse-v1
+    sensitivity = -0.5
+}
+
+#+end_src
+** KEYBINDINGS
+
+###################
+### KEYBINDINGS ###
+###################
+
+# See https://wiki.hyprland.org/Configuring/Keywords/
+#+begin_src conf
+$mainMod = SUPER # Sets "Windows" key as main modifier
+
+# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
+bind = $mainMod, Return, exec, $terminal
+bind = $mainMod, Q, killactive,
+bind = $mainMod, M, exit,
+bind = $mainMod, E, exec, $edit
+bind = $mainMod, F, exec, $fileManager
+bind = $mainMod, V, togglefloating,
+bind = $mainMod, R, exec, $menu
+bind = $mainMod, P, pseudo, # dwindle
+bind = $mainMod, J, togglesplit, # dwindle
+bind = $mainMod, B, exec, $browser       #old xdg-open "https://"
+bind = $mainMod SHIFT, R, exec, pkill waybar && hyprctl dispatch exec waybar
+bind = $mainMod SHIFT, H, exec, hyprctl reload
+
+
+# Move focus with mainMod + arrow keys
+bind = $mainMod, left, movefocus, l
+bind = $mainMod, right, movefocus, r
+bind = $mainMod, up, movefocus, u
+bind = $mainMod, down, movefocus, d
+
+# Switch workspaces with mainMod + [0-9]
+bind = $mainMod, 1, workspace, 1
+bind = $mainMod, 2, workspace, 2
+bind = $mainMod, 3, workspace, 3
+bind = $mainMod, 4, workspace, 4
+bind = $mainMod, 5, workspace, 5
+bind = $mainMod, 6, workspace, 6
+bind = $mainMod, 7, workspace, 7
+bind = $mainMod, 8, workspace, 8
+bind = $mainMod, 9, workspace, 9
+bind = $mainMod, 0, workspace, 10
+
+# Move active window to a workspace with mainMod + SHIFT + [0-9]
+bind = $mainMod SHIFT, 1, movetoworkspace, 1
+bind = $mainMod SHIFT, 2, movetoworkspace, 2
+bind = $mainMod SHIFT, 3, movetoworkspace, 3
+bind = $mainMod SHIFT, 4, movetoworkspace, 4
+bind = $mainMod SHIFT, 5, movetoworkspace, 5
+bind = $mainMod SHIFT, 6, movetoworkspace, 6
+bind = $mainMod SHIFT, 7, movetoworkspace, 7
+bind = $mainMod SHIFT, 8, movetoworkspace, 8
+bind = $mainMod SHIFT, 9, movetoworkspace, 9
+bind = $mainMod SHIFT, 0, movetoworkspace, 10
+
+# Example special workspace (scratchpad)
+bind = $mainMod, S, togglespecialworkspace, magic
+bind = $mainMod SHIFT, S, movetoworkspace, special:magic
+
+# Scroll through existing workspaces with mainMod + scroll
+bind = $mainMod, mouse_down, workspace, e+1
+bind = $mainMod, mouse_up, workspace, e-1
+
+# Move/resize windows with mainMod + LMB/RMB and dragging
+bindm = $mainMod, mouse:272, movewindow
+bindm = $mainMod, mouse:273, resizewindow
+
+# Laptop multimedia keys for volume and LCD brightness
+bindel = ,XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
+bindel = ,XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindel = ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindel = ,XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bindel = ,XF86MonBrightnessUp, exec, brightnessctl s 10%+
+bindel = ,XF86MonBrightnessDown, exec, brightnessctl s 10%-
+
+# Requires playerctl
+bindl = , XF86AudioNext, exec, playerctl next
+bindl = , XF86AudioPause, exec, playerctl play-pause
+bindl = , XF86AudioPlay, exec, playerctl play-pause
+bindl = , XF86AudioPrev, exec, playerctl previous
+
+
+#+end_src
+** WINDOWS AND WORKSPACES
+##############################
+### WINDOWS AND WORKSPACES ###
+##############################
+
+# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+# See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
+
+# Example windowrule
+# windowrule = float,class:^(kitty)$,title:^(kitty)$
+
+# Ignore maximize requests from apps. You'll probably like this.
+#+begin_src conf
+windowrule = suppressevent maximize, class:.*
+
+# Fix some dragging issues with XWayland
+windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
+windowrule = workspace 1, class:^(zen*)$
+windowrule = workspace 2, class:^([Ee]macs)$
+
+
+#+end_src
 * WAYBAR
 **TODO same as hyprland; copy in waybar config and link them to dotfiles repo

@@ -33,11 +33,13 @@
           sops-nix.nixosModules.sops
           pia.nixosModules."x86_64-linux".default
 
-        # ({
-        #   nixpkgs.overlays = [
-        #     (import ./overlays/sddm-themes.nix)
-        #   ];
-        # })
+         ({
+           nixpkgs.overlays = [
+           # (import ./overlays/sddm-themes.nix)
+
+             (import ./overlays/plex.nix)
+           ];
+         })
         ];
       };
     };

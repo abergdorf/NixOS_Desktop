@@ -70,10 +70,9 @@
     #video plugins
     mpv
     ffmpeg
-    #madvr #maybe not needed?
-
     yt-dlp
     syncplay
+    plexmediaserver
 
 
     #python
