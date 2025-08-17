@@ -47,10 +47,9 @@ This is an attempt to put my nix files in this org-mode file
  Flakes allow you to put your whole system in the user home rather than root/etc/nixos which means you don't need sudo to edit the files. Also the flake.lock file is how you can update packages without upgrading nixos?
 
  #+begin_src nix :tangle flake.nix
-#flake.nix
+# flake.nix
 {
   description = "NixOS configuration";
-#org-mode tangled
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
@@ -58,14 +57,22 @@ This is an attempt to put my nix files in this org-mode file
     hyprland.url = "github:hyprwm/Hyprland";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-   # zen-browser.url = "github:MarceColl/zen-browser-flake";
-    zen-browser.url = "github:abergdorf/zen-browser-flake";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     pia.url = "github:Fuwn/pia.nix";
     pia.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "github:abergdorf/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }:
+  let
+    pkgs = import nixpkgs {
+      system = "x86_64-linux";
+      config = {
+        allowUnfree = true;
+      };
+    };
+  in
+  {
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -77,22 +84,17 @@ This is an attempt to put my nix files in this org-mode file
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.andrew = ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
           sops-nix.nixosModules.sops
           pia.nixosModules."x86_64-linux".default
+          {nixpkgs.pkgs = pkgs;}
 
-         ({
-           nixpkgs.overlays = [
-           # (import ./overlays/sddm-themes.nix)
-
-             (import ./overlays/plex.nix)
-           ];
-
-          nixpkgs.config.allowUnfree = true;
-         })
+          # This overlay is what provides the pkgs argument to configuration.nix
+          ({
+            nixpkgs.overlays = [
+              (import ./overlays/plex.nix)
+            ];
+          })
         ];
       };
     };
@@ -620,9 +622,7 @@ environment.systemPackages = with pkgs; [
     sddm-astronaut
 
 ];
-nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "zen-browser"
-  ];
+
 #+end_src
 
 ** System Services and Daemons
@@ -730,6 +730,7 @@ Do not change this value unless you have manually inspected all the changes it w
 * ZEN.NIX
 Not really sure what the right way to go about this is, but i'm going to take the flake.nix from MarceColl and modify it to have modern zen.
 I want to ultimately have it auto-update so i don't get that stupid notification every time
+file:/home/andrew/nix-flakes/zen-browser/flake.nix
 ** flake.nix
 #+begin_src nix :tangle ../nix-flakes/zen-browser/flake.nix
 {

@@ -282,9 +282,6 @@ environment.systemPackages = with pkgs; [
     sddm-astronaut
 
 ];
-nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "zen-browser"
-  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

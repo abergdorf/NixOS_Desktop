@@ -1,7 +1,6 @@
-#flake.nix
+# flake.nix
 {
   description = "NixOS configuration";
-#org-mode tangled
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
@@ -9,14 +8,22 @@
     hyprland.url = "github:hyprwm/Hyprland";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-   # zen-browser.url = "github:MarceColl/zen-browser-flake";
-    zen-browser.url = "github:abergdorf/zen-browser-flake";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     pia.url = "github:Fuwn/pia.nix";
     pia.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "github:abergdorf/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }:
+  let
+    pkgs = import nixpkgs {
+      system = "x86_64-linux";
+      config = {
+        allowUnfree = true;
+      };
+    };
+  in
+  {
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -28,22 +35,17 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.andrew = ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
           sops-nix.nixosModules.sops
           pia.nixosModules."x86_64-linux".default
+          {nixpkgs.pkgs = pkgs;}
 
-         ({
-           nixpkgs.overlays = [
-           # (import ./overlays/sddm-themes.nix)
-
-             (import ./overlays/plex.nix)
-           ];
-
-          nixpkgs.config.allowUnfree = true;
-         })
+          # This overlay is what provides the pkgs argument to configuration.nix
+          ({
+            nixpkgs.overlays = [
+              (import ./overlays/plex.nix)
+            ];
+          })
         ];
       };
     };
