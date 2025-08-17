@@ -41,6 +41,8 @@
 
              (import ./overlays/plex.nix)
            ];
+
+          nixpkgs.config.allowUnfree = true;
          })
         ];
       };

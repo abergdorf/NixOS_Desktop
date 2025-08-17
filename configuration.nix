@@ -1,4 +1,4 @@
-{inputs, config, pkgs, zen-browser, ... }:
+{inputs, config, pkgs, lib, ... }:
 #org-mode tangled
 {
   imports =
@@ -24,7 +24,6 @@ automatic = true;
     };
 };
    # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
 
   #Enable polkit (policy kit)
@@ -277,12 +276,15 @@ environment.systemPackages = with pkgs; [
     python3
     waybar #some weirdness about having it in home-manager
     #inputs.zen-browser.packages."${system}".specific
-    zen-browser.packages.${pkgs.system}.zenBrowser
+    inputs.zen-browser.packages.${pkgs.system}.zenBrowser
     catppuccin-sddm
     sddm-sugar-dark
     sddm-astronaut
 
 ];
+nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "zen-browser"
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

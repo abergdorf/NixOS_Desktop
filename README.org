@@ -1,6 +1,6 @@
 #+TITLE: NixOS configuration
 #+AUTHOR: Andrew Bergdorf
-#+DATE: <2025-07-24 Thu>
+#+DATE:Sun Aug 17 18:16:17 2025
 
 * TABLE OF CONTENTS :toc:
 - [[#about][ABOUT]]
@@ -90,6 +90,8 @@ This is an attempt to put my nix files in this org-mode file
 
              (import ./overlays/plex.nix)
            ];
+
+          nixpkgs.config.allowUnfree = true;
          })
         ];
       };
@@ -285,12 +287,12 @@ home.sessionVariables = {
 
 * CONFIGURATION.NIX
  This is the mothership where all the files will be linked
-[[file:configuration.nix]]
+ [[file:configuration.nix]]
 ** Startup and imports
 Lets get the main configuration file going. We'll call the inputs and add imports, such as modules from other .nix files.
 
  #+begin_src nix :tangle configuration.nix
-{inputs, config, pkgs, zen-browser, ... }:
+{inputs, config, pkgs, lib, ... }:
 #org-mode tangled
 {
   imports =
@@ -316,7 +318,6 @@ automatic = true;
     };
 };
    # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
 
   #Enable polkit (policy kit)
@@ -613,13 +614,15 @@ environment.systemPackages = with pkgs; [
     python3
     waybar #some weirdness about having it in home-manager
     #inputs.zen-browser.packages."${system}".specific
-    zen-browser.packages.${pkgs.system}.zenBrowser
+    inputs.zen-browser.packages.${pkgs.system}.zenBrowser
     catppuccin-sddm
     sddm-sugar-dark
     sddm-astronaut
 
 ];
-
+nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "zen-browser"
+  ];
 #+end_src
 
 ** System Services and Daemons
@@ -733,7 +736,7 @@ I want to ultimately have it auto-update so i don't get that stupid notification
   description = "Zen Browser";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs = { self, nixpkgs }:
@@ -742,6 +745,9 @@ I want to ultimately have it auto-update so i don't get that stupid notification
       version = "1.14.11b";
       pkgs = import nixpkgs {
         inherit system;
+        config = {
+        allowUnfree = true;
+        };
       };
 
       runtimeLibs = with pkgs; [
