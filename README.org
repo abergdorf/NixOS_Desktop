@@ -123,6 +123,7 @@ This is an attempt to put my nix files in this org-mode file
     gnumake
     openvpn
     gh
+    nh
 
     #fonts and icons
     bibata-cursors

@@ -22,6 +22,7 @@
     gnumake
     openvpn
     gh
+    nh
 
     #fonts and icons
     bibata-cursors
