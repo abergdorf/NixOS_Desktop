@@ -232,6 +232,22 @@ sops = {
 #  '';
 #
 
+#need to add dynamic libraries so that zen-browser can find correct library paths
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # Add any missing dynamic libraries here
+    # Use ldd on the original binary to find missing libraries
+    # Example:
+    glibc
+    libGL
+    xorg.libXt
+    dbus-glib
+    nss
+    ttf2pt1
+    noto-fonts
+    ffmpeg
+  ];
+
 environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget

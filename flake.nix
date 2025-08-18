@@ -20,6 +20,7 @@
       system = "x86_64-linux";
       config = {
         allowUnfree = true;
+        allowUnfreePredicate = (pkg: true);
       };
     };
   in
