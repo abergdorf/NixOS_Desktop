@@ -39,6 +39,9 @@
   - [[#keybindings][KEYBINDINGS]]
   - [[#windows-and-workspaces][WINDOWS AND WORKSPACES]]
 - [[#waybar][WAYBAR]]
+  - [[#config][config]]
+  - [[#stylecss][Style.css]]
+  - [[#scripts][Scripts]]
 
 * ABOUT
 This is an attempt to put my nix files in this org-mode file
@@ -940,13 +943,13 @@ I feel like having the org file with sections will make more sense for me with e
 ################
 ### MONITORS ###
 ################
-
+file:/home/andrew/.config/hypr/hyprland.conf
 # See https://wiki.hyprland.org/Configuring/Monitors/
 # monitor=,1920x1080@120,auto,auto
 
 
-#+begin_src conf
-
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
+#org-mode tangled
 monitor=,3840x2160@30,auto,1.5
 
 
@@ -959,7 +962,7 @@ monitor=,3840x2160@30,auto,1.5
 ###################
 
 # See https://wiki.hyprland.org/Configuring/Keywords/
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 $terminal = ghostty
 $fileManager = dolphin
 $menu = rofi -show drun
@@ -976,7 +979,7 @@ $browser = zen
 
  Autostart necessary processes (like notifications daemons, status bars, etc.)
  Or execute your favorite apps at launch like this:
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 exec-once = $terminal
 exec-once = $edit
 exec-once = $browser
@@ -995,7 +998,7 @@ exec-once = systemctl start --user polkit-gnome-authentication-agent-1
 #############################
 
 # See https://wiki.hyprland.org/Configuring/Environment-variables/
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 env = XCURSOR_THEME,Bibata-Modern-Ice
 env = XCURSOR_SIZE,24
 env = HYPRCURSOR_SIZE,24
@@ -1017,7 +1020,7 @@ exec-once = gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
 # Refer to https://wiki.hyprland.org/Configuring/Variables/
 
 # https://wiki.hyprland.org/Configuring/Variables/#general
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 general {
     gaps_in = 5
     gaps_out = 20
@@ -1129,7 +1132,7 @@ misc {
 #############
 
 # https://wiki.hyprland.org/Configuring/Variables/#input
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 input {
     kb_layout = us
     kb_variant =
@@ -1166,7 +1169,7 @@ device {
 ###################
 
 # See https://wiki.hyprland.org/Configuring/Keywords/
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 $mainMod = SUPER # Sets "Windows" key as main modifier
 
 # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
@@ -1254,7 +1257,7 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 # windowrule = float,class:^(kitty)$,title:^(kitty)$
 
 # Ignore maximize requests from apps. You'll probably like this.
-#+begin_src conf
+#+begin_src conf :tangle ~/.config/hypr/hyprland.conf
 windowrule = suppressevent maximize, class:.*
 
 # Fix some dragging issues with XWayland
@@ -1265,4 +1268,474 @@ windowrule = workspace 2, class:^([Ee]macs)$
 
 #+end_src
 * WAYBAR
-**TODO same as hyprland; copy in waybar config and link them to dotfiles repo
+  Waybar config with script for VPN status
+** config
+#+begin_src jsonc
+{
+    "layer": "top",
+    "position": "top",
+    "exclusive": true,
+    "passtrough": false,
+    "gtk-layer-shell": true,
+    "height": 60,
+    "spacing": 0,
+
+
+    "modules-left": [
+        "custom/launcher",
+        "hyprland/window"
+    ],
+
+    "modules-center": [
+
+        "hyprland/workspaces"
+    ],
+
+    "modules-right": [
+        "tray",
+        "network#wifi",
+        "custom/vpn",
+        "custom/vpn-cycle",
+        "custom/vpn-dc",
+        "pulseaudio",
+        "pulseaudio#microphone",
+        "clock"
+    ],
+
+    "hyprland/window": {
+        "format": "{}"
+    },
+
+    "custom/launcher": {
+    "format" : " {}",
+    "on-click": "sh -c '(sleep 0.5s; rofi -show drun)' & disown",
+    "icon-size": 90,
+    "tooltip": false,
+},
+
+    "hyprland/workspaces": {
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "all-outputs": true,
+        "on-click": "activate",
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "10": "0"
+          },
+          "swap-icon-label": true,
+          "sort-by-number": true
+    },
+
+    "tray": {
+        "icon-size": 22,
+        "tooltip": false,
+        "spacing": 10
+    },
+    "network#wifi": {
+      "interface": "wlp3s0",
+      "format-wifi": "{icon} {essid} {ipaddr}",
+      "format-disconnected": "󰤮 No network",
+      "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"], // Example Nerd Font icons for signal strength
+      "on-click": "/nix/store/vj6pmnh0xhijavk0z21mp6bnhfv4r553-network-manager-applet-1.36.0/bin/nm-applet"
+    },
+"custom/vpn": {
+    "exec": "/home/andrew/.config/waybar/scripts/vpn-status.sh",
+    "format": "{icon}{text}",
+    "return-type": "json",
+    "interval": 3,
+    "max-length": 100,
+    "format-icons": {
+          "connected": "🔒",
+          "disconnected": "🔓"
+      },
+    "on-click": "/home/andrew/.config/waybar/scripts/toggle-vpn.sh",
+    "on-click-right": "nmcli connection down us_texas",
+    "tooltip": "{tooltip}"
+},
+
+"custom/vpn-cycle": {
+    "format": " ",
+    "on-click": "/home/andrew/.config/waybar/scripts/cycle-vpn.sh",
+    "tooltip": true,
+    "tooltip-format": "cycle VPNs"
+},
+
+"custom/vpn-dc": {
+    "format": " ",
+    "on-click": "/home/andrew/.config/waybar/scripts/cycle-vpn.sh off",
+    "tooltip": true,
+    "tooltip-format": "Disconnect from VPN"
+},
+
+    "clock": {
+        "format":"<b>󰥔 {:%R 󰃭 %d/%m}</b>",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "tooltip": false,
+        "format-muted": " Muted",
+        "on-click": "pamixer -t",
+        "on-scroll-up": "pamixer -i 5",
+        "on-scroll-down": "pamixer -d 5",
+        "scroll-step": 5,
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        }
+    },
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "tooltip": false,
+        "format-source": "󰍬 {volume}%",
+        "format-source-muted": "󰍭 Muted",
+        "on-click": "pamixer --default-source -t",
+        "on-scroll-up": "pamixer --default-source -i 5",
+        "on-scroll-down": "pamixer --default-source -d 5",
+        "scroll-step": 5
+    }
+}
+
+
+#+end_src
+** Style.css
+#+begin_src css
+ {
+    border: none;
+    border-radius: 15px; /* Always specify units like 'px' */
+    font-family: Fira Code, monospace;
+    font-weight: bold;
+    font-size: 18px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(21, 18, 27, 0);
+    color: #cdd6f4;
+}
+
+tooltip {
+    background: #1e1e2e;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #11111b;
+}
+
+#workspaces button {
+    padding: 5px;
+    color: #313244;
+    margin-right: 5px;
+}
+
+#workspaces button.active {
+    color: #a6adc8;
+}
+
+#workspaces button.focused {
+    color: #a6adc8;
+    background: #eba0ac;
+    border-radius: 10px;
+}
+
+#workspaces button.urgent {
+    color: #11111b;
+    background: #a6e3a1;
+    border-radius: 10px;
+}
+
+#workspaces button:hover {
+    background: #11111b;
+    color: #cdd6f4;
+    border-radius: 10px;
+}
+
+/* --- Common Module Styling Group --- */
+/* This group applies base styles to most modules for consistency */
+/* Ensure all your custom modules are listed here with their correct IDs */
+#custom-language,
+#custom-updates,
+#custom-caffeine,
+#custom-weather,
+#custom-launcher,
+#custom-vpn,
+#custom-vpn-cycle, /* Assuming this is the ID for your VPN Cycle module */
+#custom-vpn-dc,    /* Assuming this is the ID for your VPN Disconnect module */
+#window,
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#workspaces,
+#tray,
+#backlight {
+    background: #1e1e2e;
+    padding: 0px 10px;
+    margin: 3px 0px;
+    margin-top: 10px;
+    border: 1px solid #FFFFFF; /* All modules get a white border */
+    border-radius: 10px; /* All modules get rounded corners */
+    min-width: 15px; /* Added min-width to help with consistent sizing and visual centering */
+}
+
+/* --- Specific Module Overrides and Classes --- */
+
+/* Main VPN Status Module */
+#custom-vpn {
+    color: #ffffff;
+    margin-right: 5px;
+}
+#custom-vpn.connected {
+    background-color: #26a65b;
+}
+#custom-vpn.disconnected {
+    background-color: #e74c3c;
+}
+#custom-vpn.connecting {
+    background-color: #f1c40f;
+}
+
+/* VPN Cycle Button Module */
+#custom-vpn-cycle {
+    color: #ffffff;
+    margin-right: 5px; /* Add some spacing if it's next to other modules */
+    /* All other styles (background, padding, border, border-radius, text-align) are inherited from the group */
+}
+
+/* VPN Disconnect Button Module */
+#custom-vpn-dc {
+    color: #ffffff;
+    margin-right: 5px; /* Add some spacing if it's next to other modules */
+    /* All other styles are inherited from the group */
+}
+
+
+#tray {
+    border-radius: 10px;
+    margin-right: 5px;
+    /* border-color already set by the group */
+}
+
+#workspaces {
+    border-radius: 10px;
+    margin-left: 5px;
+    padding-right: 0px;
+    padding-left: 5px;
+    /* background and border-color already set by the group */
+}
+
+#custom-caffeine {
+    color: #89dceb;
+    border-radius: 10px 0px 0px 10px;
+    border-right: 0px;
+    margin-left: 10px;
+}
+
+#custom-language {
+    color: #f38ba8;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+#custom-updates {
+    color: #f5c2e7;
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 10px 0px 0px 10px;
+}
+
+#window {
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-right: 10px;
+    /* border-color already set by the group */
+}
+
+#clock {
+    color: #fab387;
+    border-radius: 10px; /* Simplified, was 10px 10px 10px 10px */
+    margin-right: 5px;
+    /* border-color already set by the group */
+}
+
+#network {
+    color: #f9e2af;
+    margin-right: 5px;
+    /* border-color already set by the group */
+}
+
+#pulseaudio {
+    color: #89b4fa;
+    margin-left: 5px;
+    /* border-color already set by the group */
+}
+
+#pulseaudio.microphone {
+    color: #cba6f7;
+    margin-right: 5px;
+    margin-left: 5px;
+    /* border-color already set by the group */
+}
+
+#battery {
+    color: #a6e3a1;
+    border-radius: 0 10px 10px 0;
+    margin-right: 10px;
+    border-left: 0px;
+}
+
+#custom-weather {
+    border-radius: 10px; /* Simplified */
+    margin-left: 5px;
+}
+
+#custom-launcher {
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #89b4fa;
+    /* background, border-color, border-radius are now inherited from the group */
+}
+
+
+#+end_src
+** Scripts
+*** VPN status
+#+begin_src bash
+#!/run/current-system/sw/bin/zsh
+
+# ---
+# Script Logic
+# ---
+
+# Get the name of the active VPN connection, if any
+# nmcli will list 'VPN' as a type if a VPN is active.
+# We'll use grep to find the line with "vpn" (case-insensitive) and awk to extract the connection name.
+ACTIVE_VPN_NAME=$(/run/current-system/sw/bin/nmcli -t -f NAME,TYPE connection show --active | \
+                   /run/current-system/sw/bin/grep -i 'vpn' | \
+                   /run/current-system/sw/bin/awk -F: '{print $1}')
+
+# Check if ACTIVE_VPN_NAME is populated
+if [[ -n "$ACTIVE_VPN_NAME" ]]; then
+  # A VPN is active
+  echo '{"text": "VPN", "tooltip": "Connected to '$ACTIVE_VPN_NAME'", "class": "connected"}'
+else
+  # No VPN is active.
+  # We can optionally add a check here if NetworkManager itself is running or if there are any connections.
+  # For simplicity, if no VPN is active, we just show "Disconnected".
+  echo '{"text": "VPN", "tooltip": "Disconnected", "class": "disconnected"}'
+fi
+
+#+end_src
+*** Cycle VPN
+#+begin_src bash
+#!/run/current-system/sw/bin/zsh
+
+# ---
+# Configuration
+# ---
+
+# Define your VPN connections in an array in the order you want to cycle
+# The keys are aliases for easy command-line use, and values are the actual nmcli connection names.
+declare -A VPN_MAP
+VPN_MAP["texas"]="us_texas"
+VPN_MAP["california"]="us_california"
+VPN_MAP["atlanta"]="us_atlanta"
+
+# Create an indexed array of the actual VPN names for cycling
+# (v) expansion flag extracts values from associative array
+VPN_NAMES=("${(v)VPN_MAP[@]}")
+
+# ---
+# Script Logic
+# ---
+
+CURRENT_ACTIVE_VPN=""
+NEXT_VPN_TO_CONNECT=""
+
+# Find the currently active VPN from our list
+for vpn_name_check in "${VPN_NAMES[@]}"; do
+  if /run/current-system/sw/bin/nmcli connection show --active | /run/current-system/sw/bin/grep -q "$vpn_name_check"; then
+    CURRENT_ACTIVE_VPN="$vpn_name_check"
+    break
+  fi
+done
+
+# Determine the next VPN to connect to
+if [[ -z "$CURRENT_ACTIVE_VPN" ]]; then # Using [[ ]]
+  # No VPN from our list is active, connect to the first one
+  # Zsh arrays are 1-indexed by default, so index 1 is the first element.
+  NEXT_VPN_TO_CONNECT="${VPN_NAMES[1]}"
+  echo "No VPN from the list currently active. Connecting to the first VPN: $NEXT_VPN_TO_CONNECT"
+else
+  echo "Currently active VPN from list: $CURRENT_ACTIVE_VPN"
+
+  # Find the index of the currently active VPN
+  current_vpn_index=-1
+  # Corrected loop for Zsh 1-based indexing: iterate from 1 to the length of the array
+  for i in $(seq 1 ${#VPN_NAMES[@]}); do
+    if [[ "${VPN_NAMES[$i]}" == "$CURRENT_ACTIVE_VPN" ]]; then # Using [[ ]]
+      current_vpn_index="$i"
+      break
+    fi
+  done
+
+  # Calculate the next index, cycling back to the start if at the end
+  # If current_vpn_index is the last index, (last_index % length) will be 0.
+  # Adding 1 brings it to the first index (1).
+  # Otherwise, (current_vpn_index % length) will be current_vpn_index, and adding 1 gives the next.
+  next_vpn_index=$(( (current_vpn_index % ${#VPN_NAMES[@]}) + 1 ))
+
+  # Get the next VPN name
+  NEXT_VPN_TO_CONNECT="${VPN_NAMES[$next_vpn_index]}"
+
+  # If an argument is passed to specifically disconnect
+  if [[ "$#" -eq 1 && "$1" == "off" ]]; then # Using [[ ]]
+    echo "Argument 'off' received. Deactivating $CURRENT_ACTIVE_VPN."
+    NEXT_VPN_TO_CONNECT="" # Set to empty to just disconnect
+  elif [[ "$NEXT_VPN_TO_CONNECT" == "$CURRENT_ACTIVE_VPN" ]]; then # Using [[ ]]
+    # This scenario happens if there's only one VPN in the list,
+    # or if we've cycled back to the only active one.
+    # In this case, we disconnect it.
+    echo "Already at the last VPN in the cycle or only one VPN from list active. Disconnecting: $CURRENT_ACTIVE_VPN"
+    NEXT_VPN_TO_CONNECT="" # Set to empty to just disconnect
+  else
+    echo "Next VPN in cycle: $NEXT_VPN_TO_CONNECT"
+  fi
+fi
+
+# ---
+# Perform actions
+# ---
+
+# Disconnect current active VPN if it's from our list and we're connecting to a different one or disconnecting entirely
+# Changed to [[ ]] for more robust string comparison in Zsh
+if [[ -n "$CURRENT_ACTIVE_VPN" && ( -z "$NEXT_VPN_TO_CONNECT" || "$CURRENT_ACTIVE_VPN" != "$NEXT_VPN_TO_CONNECT" ) ]]; then
+  echo "Deactivating $CURRENT_ACTIVE_VPN..."
+  /run/current-system/sw/bin/nmcli connection down "$CURRENT_ACTIVE_VPN" &>/dev/null &
+  # Wait briefly for disconnection to take effect before connecting to the next
+  sleep 2
+fi
+
+# Connect to the next VPN if one is determined
+if [[ -n "$NEXT_VPN_TO_CONNECT" ]]; then # Using [[ ]]
+  echo "Activating $NEXT_VPN_TO_CONNECT..."
+  /run/current-system/sw/bin/nmcli connection up "$NEXT_VPN_TO_CONNECT" &>/dev/null &
+else
+  echo "No new VPN to connect to. Cycle complete or disconnected."
+fi
+
+#+end_src
