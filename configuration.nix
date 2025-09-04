@@ -318,6 +318,18 @@ services.emacs = {
 
   };
 
+#resilio-sync
+  services.resilio = {
+    enable = true;
+    user = "andrew";
+    group = "users";
+    storagePath = "/media/";
+    webui = {
+        enable = true;
+        listen = "127.0.0.1:8888"
+        };
+  };
+
 #libinput is newer, allows faster response time between keyboard typing
 services.libinput.enable = true;
 
