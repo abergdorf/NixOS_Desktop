@@ -188,6 +188,7 @@ This is an attempt to put my nix files in this org-mode file
     obsidian
     obs-studio
     qbittorrent
+    resilio-sync
 
     floorp
 
@@ -665,6 +666,18 @@ services.emacs = {
    openFirewall = true;
    package = pkgs.plex;
 
+  };
+
+#resilio-sync
+  services.resilio = {
+    enable = true;
+    user = "andrew";
+    group = "users";
+    storagePath = "/media/"
+    webui = {
+        enable = true;
+        listen = "127.0.0.1:8888"
+        };
   };
 
 #libinput is newer, allows faster response time between keyboard typing

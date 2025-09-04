@@ -64,6 +64,7 @@
     obsidian
     obs-studio
     qbittorrent
+    resilio-sync
 
     floorp
 
