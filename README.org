@@ -593,6 +593,13 @@ Install packages that are system wide. Things like neovim wget emacs git
     ffmpeg
   ];
 
+  fonts.packages = with pkgs; [
+  noto-fonts
+  noto-fonts-cjk
+  noto-fonts-emoji
+  dejavu_fonts
+];
+
 environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
@@ -671,14 +678,7 @@ services.emacs = {
 #resilio-sync
   services.resilio = {
     enable = true;
-    user = "andrew";
-    group = "users";
-    storagePath = "/media/";
-    webui = {
-        enable = true;
-        listen = "127.0.0.1:8888";
-        };
-  };
+      };
 
 #libinput is newer, allows faster response time between keyboard typing
 services.libinput.enable = true;
@@ -855,6 +855,8 @@ file:/home/andrew/nix-flakes/zen-browser/flake.nix
           --set MOZ_ALLOW_DOWNGRADE 1 \
           --set MOZ_APP_LAUNCHER zen \
           --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath runtimeLibs}"
+          --set FONTCONFIG_FILE ${pkgs.fontconfig.out}/etc/fonts/fonts.conf \
+          --set FONTCONFIG_PATH ${pkgs.fontconfig.out}/etc/fonts
           '';
 
         meta = with pkgs.lib; {

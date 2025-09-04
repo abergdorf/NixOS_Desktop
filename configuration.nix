@@ -248,6 +248,13 @@ sops = {
     ffmpeg
   ];
 
+  fonts.packages = with pkgs; [
+  noto-fonts
+  noto-fonts-cjk
+  noto-fonts-emoji
+  dejavu_fonts
+];
+
 environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
@@ -321,14 +328,7 @@ services.emacs = {
 #resilio-sync
   services.resilio = {
     enable = true;
-    user = "andrew";
-    group = "users";
-    storagePath = "/media/";
-    webui = {
-        enable = true;
-        listen = "127.0.0.1:8888";
-        };
-  };
+      };
 
 #libinput is newer, allows faster response time between keyboard typing
 services.libinput.enable = true;
