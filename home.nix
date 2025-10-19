@@ -66,7 +66,7 @@
     qbittorrent
     resilio-sync
 
-    floorp
+    floorp-bin
 
     #video plugins
     mpv
