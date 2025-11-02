@@ -182,6 +182,7 @@ This is an attempt to put my nix files in this org-mode file
     cliphist
     waypaper
     xfce.thunar
+    btop
 
 
 
@@ -644,7 +645,7 @@ environment.systemPackages = with pkgs; [
     python3
     waybar #some weirdness about having it in home-manager
     #inputs.zen-browser.packages."${system}".specific
-    inputs.zen-browser.packages.${pkgs.system}.zenBrowser
+    #inputs.zen-browser.packages.${pkgs.system}.zenBrowser
     catppuccin-sddm
     sddm-sugar-dark
     sddm-astronaut
@@ -829,7 +830,7 @@ file:/home/andrew/nix-flakes/zen-browser/flake.nix
              cp "$desktopSrc/zen.desktop" ./zen.desktop
 
              substituteInPlace ./zen.desktop \
-             --replace "Exec=zen" "Exec=$out/bin/zen"
+             --replace-{fail,warn,quiet} "Exec=zen" "Exec=$out/bin/zen"
 
              # Install the modified desktop file
              install -m644 ./zen.desktop $out/share/applications/

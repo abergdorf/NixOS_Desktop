@@ -58,6 +58,7 @@
     cliphist
     waypaper
     xfce.thunar
+    btop
 
 
 
