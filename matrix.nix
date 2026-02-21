@@ -92,6 +92,7 @@ in {
       "${domain}" = {
         forceSSL = true;
         enableACME = true;
+        acmeRoot = null;
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
 
         # Fixed: This now correctly points to the client endpoint
@@ -102,6 +103,7 @@ in {
       "${matrixSubdomain}" = {
         forceSSL = true;
         enableACME = true;
+        acmeRoot = null;
         locations."/" = {
           proxyPass = "http://127.0.0.1:8008";
           extraConfig = ''
