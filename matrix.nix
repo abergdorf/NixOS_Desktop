@@ -86,6 +86,10 @@ in {
     enable = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+    appendHttpConfig = ''
+      proxy_headers_hash_max_size 512;
+      proxy_headers_hash_bucket_size 64;
+    '';
 
     virtualHosts = {
       # The base domain tells other servers where your Matrix instance actually lives
@@ -127,10 +131,12 @@ in {
         "cellochem.vip" = {
           service = "https://127.0.0.1:443";
           originRequest.noTLSVerify = true; # Trusts your local Let's Encrypt certs
+          originServerName = "cellochem.vip";
         };
         "matrix.cellochem.vip" = {
           service = "https://127.0.0.1:443";
           originRequest.noTLSVerify = true;
+          originServerName = "matrix.cellochem.vip";
         };
       };
     };
