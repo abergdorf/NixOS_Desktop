@@ -335,6 +335,14 @@ services.emacs = {
       dnsProvider = "porkbun";
       environmentFile = "/var/lib/acme/porkbun-secret.env";
   };
+    certs."cellochem.vip" = {
+      dnsProvider = "porkbun";
+      environmentFile = "/var/lib/acme/porkbun-secret.env";
+    };
+    certs."matrix.cellochem.vip" = {
+      dnsProvider = "porkbun";
+      environmentFile = "/var/lib/acme/porkbun-secret.env";
+    };
 };
 
 #resilio-sync
