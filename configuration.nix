@@ -5,6 +5,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./filesystem.nix
+      ./matrix.nix
     ];
 
    nix = {
@@ -251,7 +252,7 @@ sops = {
   fonts.packages = with pkgs; [
   noto-fonts
   noto-fonts-cjk-sans
-  noto-fonts-emoji
+  noto-fonts-color-emoji
   dejavu_fonts
 ];
 
@@ -323,6 +324,13 @@ services.emacs = {
    openFirewall = true;
    package = pkgs.plex;
 
+  };
+#nginx
+  services.nginx.enable = true;
+
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "abergy@gmail.com";
   };
 
 #resilio-sync
