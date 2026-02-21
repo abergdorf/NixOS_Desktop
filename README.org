@@ -1924,26 +1924,5 @@ in {
       };
     };
   };
-  # 6. Cloudflare Tunnel (Bypass ISP Firewall)
-  services.cloudflared = {
-    enable = true;
-    user = "root";
-    tunnels."matrix-tunnel" = {
-      credentialsFile = "/var/lib/cloudflared/tunnel.json";
-      default = "http_status:404";
-      ingress = {
-        # Route both domains directly to Nginx's secure port
-        "cellochem.vip" = {
-          service = "https://127.0.0.1:443";
-          originRequest.noTLSVerify = true; # Trusts your local Let's Encrypt certs
-        };
-        "matrix.cellochem.vip" = {
-          service = "https://127.0.0.1:443";
-          originRequest.noTLSVerify = true;
-        };
-      };
-    };
-  };
 }
-
 #+end_src
