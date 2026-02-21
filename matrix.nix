@@ -4,21 +4,23 @@ let
   # Replace these with your actual details
   domain = "cellochem.vip";
   matrixSubdomain = "matrix.${domain}";
+
   clientConfig = {
-    "m.homeserver".base_url = "https://${matrixDomain}";
+    "m.homeserver".base_url = "https://${matrixSubdomain}";
     "m.identity_server" = {};
   };
+
   serverConfig = {
-    "m.server" = "${matrixDomain}:443";
+    "m.server" = "${matrixSubdomain}:443";
   };
+
   mkWellKnown = data: ''
         default_type application/json;
         add_header Access-Control-Allow-Origin *;
-        return 200 '${builtins.toJson data}';
+        return 200 '${builtins.toJSON data}';
   '';
 in {
   # 1. Open the necessary firewall ports
-  # 80/443 for web traffic and ACME certs, 8448 for Matrix Federation
   networking.firewall.allowedTCPPorts = [ 80 443 8448 ];
 
   # 2. Configure the Matrix Synapse Service
@@ -53,17 +55,18 @@ in {
               compress = true;
             }
           ];
-        };
+        }
+      ];
+
       max_upload_size_mib = 100;
       url_preview_enabled = true;
       enable_registration = false;
       enable_metrics = false;
       registration_shared_secret_path = "/var/lib/matrix-synapse/registration_secret";
       trusted_key_servers = [
-      {
-        server_name = "matrix.org";
-      }
-      ];
+        {
+          server_name = "matrix.org";
+        }
       ];
     };
   };
@@ -89,8 +92,10 @@ in {
       "${domain}" = {
         forceSSL = true;
         enableACME = true;
-        locations."= /.well-known/matrix/server".extraConfig = mkWellknown serverConfig;
-        locations."= /.well-known/matrix/server".extraConfig = mkWellknown clientConfig;
+        locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
+
+        # Fixed: This now correctly points to the client endpoint
+        locations."= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig;
       };
 
       # The subdomain acts as the actual proxy passing traffic to Synapse
