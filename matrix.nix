@@ -62,6 +62,10 @@ in {
       url_preview_enabled = true;
       enable_registration = false;
       enable_metrics = false;
+      media_retention = {
+        local_media_lifetime = null; #doesn't remove friend's media from my server
+        remote_media_lifetime = "14d"; #removes federated trash every 2 weeks
+      }
       registration_shared_secret_path = "/var/lib/matrix-synapse/registration_secret";
       trusted_key_servers = [
         {
