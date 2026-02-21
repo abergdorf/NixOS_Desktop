@@ -135,4 +135,10 @@ in {
       };
     };
   };
+ # Explicitly define the Cloudflared user so it can own its credentials
+  users.users.cloudflared = {
+    group = "cloudflared";
+    isSystemUser = true;
+  };
+  users.groups.cloudflared = {};
 }
