@@ -119,7 +119,6 @@ in {
  # 6. Cloudflare Tunnel (Bypass ISP Firewall)
   services.cloudflared = {
     enable = true;
-    user = "root";
     tunnels."matrix-tunnel" = {
       credentialsFile = "/var/lib/cloudflared/tunnel.json";
       default = "http_status:404";
