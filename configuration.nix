@@ -330,8 +330,12 @@ services.emacs = {
 
   security.acme = {
     acceptTerms = true;
-    defaults.email = "abergy@gmail.com";
+    defaults = {
+      email = "abergy@gmail.com";
+      dnsProvider = "porkbun";
+      environmentFile = "/var/lib/acme/porkbun-secret.env";
   };
+};
 
 #resilio-sync
   services.resilio = {
