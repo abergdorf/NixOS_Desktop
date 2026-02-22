@@ -34,7 +34,7 @@ in {
   sops.templates."synapse_turn.yaml".owner = "matrix-synapse";
 
   # 1. Open the necessary firewall ports
-  networking.firewall.allowedTCPPorts = [ 80 443 8448 ];
+  #networking.firewall.allowedTCPPorts = [ 80 443 8448 ];
 
   # 2. Configure the Matrix Synapse Service
   services.matrix-synapse = {
@@ -203,7 +203,7 @@ in {
   };
 
   # Open the NixOS firewall for the TURN matchmaking port and the video relay ports
-  networking.firewall.allowedTCPPorts = [ 3478 5349 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8448 3478 5349 ];
   networking.firewall.allowedUDPPorts = [ 3478 5349 ];
   networking.firewall.allowedUDPPortRanges = [
     { from = 49000; to = 50000; }
