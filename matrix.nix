@@ -200,6 +200,10 @@ in {
     # The ephemeral UDP port range for actual video relay
     min-port = 49000;
     max-port = 50000;
+
+    extraConfig = ''
+      external-ip=136.32.190.0/192.168.1.125
+    '';
   };
 
   # Open the NixOS firewall for the TURN matchmaking port and the video relay ports
