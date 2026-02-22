@@ -101,6 +101,9 @@ in {
         forceSSL = true;
         enableACME = true;
         acmeRoot = null;
+
+        root = "/var/www/cellochem";
+
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
 
         # Fixed: This now correctly points to the client endpoint
