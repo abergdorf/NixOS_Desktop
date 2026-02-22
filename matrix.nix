@@ -84,8 +84,8 @@ in {
       };
       # --- TURN Server Settings for Calls ---
       turn_uris = [
-        "turn:cellochem.vip:3478?transport=udp"
-        "turn:cellochem.vip:3478?transport=tcp"
+        "turn:turn.cellochem.vip:3478?transport=udp"
+        "turn:turn.cellochem.vip:3478?transport=tcp"
       ];
       turn_shared_secret = config.sops.secrets.turnSecret.path;
       turn_user_lifetime = "1h";
