@@ -1796,6 +1796,12 @@ let
   clientConfig = {
     "m.homeserver".base_url = "https://${matrixSubdomain}";
     "m.identity_server" = {};
+    "org.matrix.msc4143.rtc_foci" = [
+      {
+        type = "livekit";
+        livekit_service_url = "https://${matrixSubdomain}/livekit/jwt";
+      }
+    ];
   };
 
   serverConfig = {
@@ -1810,16 +1816,11 @@ let
 in {
 
   #SOPS
-  sops.secrets.turnSecret = {
-    owner = "turnserver";
+  sops.secrets.livekit_key = {
+    mode = "0444";
   };
-  # Create a templated YAML file for Synapse behind the scenes
-  sops.templates."synapse_turn.yaml".content = ''
-    turn_shared_secret: "${config.sops.placeholder.turnSecret}"
-  '';
 
-  # Ensure Synapse has permission to read the templated file
-  sops.templates."synapse_turn.yaml".owner = "matrix-synapse";
+
 
   # 1. Open the necessary firewall ports
   #networking.firewall.allowedTCPPorts = [ 80 443 8448 ];
@@ -1859,8 +1860,14 @@ in {
         }
       ];
 
-      extraConfigFiles = [ config.sops.templates."synapse_turn.yaml".path ];
+      #extraConfigFiles = [ config.sops.templates."synapse_turn.yaml".path ];
 
+      # --- Enable Modern LiveKit/Element Call ---
+      experimental_features = {
+        msc3266_enabled = true;
+        msc4140_enabled = true;
+        msc4222_enabled = true;
+      };
 
       max_upload_size_mib = 100;
       url_preview_enabled = true;
@@ -1870,23 +1877,15 @@ in {
         local_media_lifetime = null; #doesn't remove friend's media from my server
         remote_media_lifetime = "14d"; #removes federated trash every 2 weeks
       };
-      # --- TURN Server Settings for Calls ---
-      turn_uris = [
-        "turn:turn.cellochem.vip:3478?transport=udp"
-        "turn:turn.cellochem.vip:3478?transport=tcp"
-      ];
-      turn_shared_secret = config.sops.secrets.turnSecret.path;
-      turn_user_lifetime = "1h";
-      turn_allow_guests = true;
-      #--
-      registration_shared_secret_path = "/var/lib/matrix-synapse/registration_secret";
+
+     registration_shared_secret_path = "/var/lib/matrix-synapse/registration_secret";
       trusted_key_servers = [
         {
           server_name = "matrix.org";
         }
-      ];
-    };
-  };
+      ];#listeners
+    };#settings
+  };#matrix-synapse
 
   # 3. Automatically provision PostgreSQL for Synapse
   services.postgresql = {
@@ -1918,16 +1917,27 @@ in {
         root = "/var/www/cellochem";
 
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
-
-        # Fixed: This now correctly points to the client endpoint
         locations."= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig;
       };
 
-      # The subdomain acts as the actual proxy passing traffic to Synapse
+      # The subdomain acts as the actual proxy passing traffic to Synapse and LiveKit
       "${matrixSubdomain}" = {
         forceSSL = true;
         enableACME = true;
         acmeRoot = null;
+
+        # --- NEW: Route authorization requests to the JWT bridge (Port 8080) ---
+        locations."^~ /livekit/jwt/" = {
+          proxyPass = "http://127.0.0.1:8080/";
+        };
+
+        # --- NEW: Route active video streams to the LiveKit SFU (Port 7880) ---
+        locations."^~ /livekit/sfu/" = {
+          proxyPass = "http://127.0.0.1:7880/";
+          proxyWebsockets = true; # Crucial for LiveKit!
+        };
+
+        # --- EXISTING: The Catch-All for standard Synapse chat traffic ---
         locations."/" = {
           proxyPass = "http://127.0.0.1:8008";
           extraConfig = ''
@@ -1968,37 +1978,35 @@ in {
   };
   users.groups.cloudflared = {};
 
-  #coturn
-  # --- Coturn (STUN/TURN for Audio/Video Calls) ---
-  services.coturn = {
+  # --- The LiveKit SFU (Video Server) ---
+  services.livekit = {
     enable = true;
-    no-cli = true;
-    no-tcp-relay = true;
-
-    # The domain Element will look for
-    realm = "turn.cellochem.vip";
-
-    # Listen on all local network interfaces
-    listening-ips = [ "0.0.0.0" ];
-
-    # Generate a strong, random password here!
-    use-auth-secret = true;
-    static-auth-secret = config.sops.secrets.turnSecret.path;
-
-    # The ephemeral UDP port range for actual video relay
-    min-port = 49000;
-    max-port = 50000;
-
-    extraConfig = ''
-      external-ip=136.32.190.0/192.168.1.125
-    '';
+    keyFile = config.sops.secrets.livekit_key.path;
+    settings = {
+      port = 7880; # Internal websocket port
+      room.auto_create = false;
+      rtc = {
+        # Force LiveKit to use your home's actual public IP for video routing
+        node_ip = "136.32.190.0";
+        port_range_start = 50000;
+        port_range_end = 50050;
+      };
+    };
   };
 
-  # Open the NixOS firewall for the TURN matchmaking port and the video relay ports
-  networking.firewall.allowedTCPPorts = [ 80 443 8448 3478 5349 ];
-  networking.firewall.allowedUDPPorts = [ 3478 5349 ];
+  # Open the NixOS firewall strictly for the LiveKit UDP video ports
   networking.firewall.allowedUDPPortRanges = [
-    { from = 49000; to = 50000; }
+    { from = 50000; to = 50050; }
   ];
+
+  # --- The Matrix JWT Bridge ---
+  services.lk-jwt-service = {
+    enable = true;
+    livekitUrl = "wss://${matrixSubdomain}/livekit/sfu";
+    keyFile = config.sops.secrets.livekit_key.path;
+  };
+
+  # Allow your users to create video rooms
+  systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = "cellochem.vip";
 }
 #+end_src
