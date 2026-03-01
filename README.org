@@ -1897,12 +1897,6 @@ in {
     };#settings
   };#matrix-synapse
 
-  # Automatically copy and chown the bridge registration file before Synapse boots
-  systemd.services.matrix-synapse.preStart = ''
-    cp -f /var/lib/mautrix-telegram/telegram-registration.yaml /var/lib/matrix-synapse/telegram-registration.yaml
-    chown matrix-synapse:matrix-synapse /var/lib/matrix-synapse/telegram-registration.yaml
-  '';
-
   # 3. Automatically provision PostgreSQL for Synapse
   services.postgresql = {
     enable = true;
@@ -2055,6 +2049,17 @@ services.mautrix-telegram = {
       };
     };
   };
-
+# A dedicated, root-level service to safely sync the bridge password file
+  systemd.services.sync-telegram-registration = {
+    description = "Sync Telegram Registration to Synapse";
+    requiredBy = [ "matrix-synapse.service" ];
+    before = [ "matrix-synapse.service" ];
+    after = [ "mautrix-telegram.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "/bin/sh -c '/run/current-system/sw/bin/cp -f /var/lib/mautrix-telegram/telegram-registration.yaml /var/lib/matrix-synapse/telegram-registration.yaml && /run/current-system/sw/bin/chown matrix-synapse:matrix-synapse /var/lib/matrix-synapse/telegram-registration.yaml'";
+      RemainAfterExit = true;
+    };
+  };
 }
 #+end_src
