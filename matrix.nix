@@ -31,7 +31,9 @@ in {
   sops.secrets.livekit_key = {
     mode = "0444";
   };
-  sops.secrets.telegram_env = {};
+  sops.secrets.telegram_env = {
+    owner = "mautrix-telegram";
+  };
 
 
   # 1. Open the necessary firewall ports

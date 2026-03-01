@@ -186,7 +186,7 @@ This is an attempt to put my nix files in this org-mode file
     wl-clipboard
     cliphist
     waypaper
-    xfce.thunar
+    thunar
     btop
 
 
@@ -592,7 +592,7 @@ Install packages that are system wide. Things like neovim wget emacs git
     # Example:
     glibc
     libGL
-    xorg.libXt
+    libXt
     dbus-glib
     nss
     ttf2pt1
@@ -1822,7 +1822,9 @@ in {
   sops.secrets.livekit_key = {
     mode = "0444";
   };
-  sops.secrets.telegram_env = {};
+  sops.secrets.telegram_env = {
+    owner = "mautrix-telegram";
+  };
 
 
   # 1. Open the necessary firewall ports

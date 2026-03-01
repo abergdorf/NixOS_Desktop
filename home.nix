@@ -57,7 +57,7 @@
     wl-clipboard
     cliphist
     waypaper
-    xfce.thunar
+    thunar
     btop
 
 

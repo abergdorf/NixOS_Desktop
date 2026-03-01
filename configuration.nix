@@ -241,7 +241,7 @@ sops = {
     # Example:
     glibc
     libGL
-    xorg.libXt
+    libXt
     dbus-glib
     nss
     ttf2pt1
