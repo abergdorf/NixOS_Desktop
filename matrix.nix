@@ -31,6 +31,7 @@ in {
   sops.secrets.livekit_key = {
     mode = "0444";
   };
+  sops.secrets.telegram_env = {};
 
 
 
@@ -74,6 +75,10 @@ in {
 
       #extraConfigFiles = [ config.sops.templates."synapse_turn.yaml".path ];
 
+      app_service_config_files = [
+        "/var/lib/mautrix-telegram/telegram-registration.yaml"
+      ];
+
       # --- Enable Modern LiveKit/Element Call ---
       experimental_features = {
         msc3266_enabled = true;
@@ -102,11 +107,11 @@ in {
   # 3. Automatically provision PostgreSQL for Synapse
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "matrix-synapse" ];
-    ensureUsers = [{
-      name = "matrix-synapse";
-      ensureDBOwnership = true;
-    }];
+    ensureDatabases = [ "matrix-synapse" "mautrix-telegram" ];
+    ensureUsers = [
+      { name = "matrix-synapse"; ensureDBOwnership = true; }
+      { name = "mautrix-telegram"; ensureDBOwnership = true; }
+      ];
   };
 
   # 4. Nginx Reverse Proxy & Matrix Delegation
@@ -220,4 +225,32 @@ in {
 
   # Allow your users to create video rooms
   systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = "cellochem.vip";
+
+
+services.mautrix-telegram = {
+    enable = true;
+    environmentFile = config.sops.secrets.telegram_env.path;
+    settings = {
+      homeserver = {
+        address = "http://127.0.0.1:8008";
+        domain = domain;
+      };
+      appservice = {
+        address = "http://127.0.0.1:8081"; # Avoids conflict with LiveKit JWT
+        hostname = "127.0.0.1";
+        port = 8081;
+        database = "postgresql:///mautrix-telegram?host=/run/postgresql";
+        id = "telegram";
+        bot_avatar = "mxc://maunium.net/tJCRmUyJDsgRNgqhOgoiHWbX";
+      };
+      bridge = {
+        relay_user_distinguishers = [];
+        permissions = {
+          # Grant only your specific user admin access to the bridge
+          "@andrew:${domain}" = "admin";
+        };
+      };
+    };
+  };
+
 }
