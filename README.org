@@ -1868,9 +1868,9 @@ in {
 
       #extraConfigFiles = [ config.sops.templates."synapse_turn.yaml".path ];
 
-      #app_service_config_files = [
-      #  "/var/lib/mautrix-telegram/telegram-registration.yaml"
-      #];
+      app_service_config_files = [
+        "/var/lib/matrix-synapse/telegram-registration.yaml"
+      ];
 
       # --- Enable Modern LiveKit/Element Call ---
       experimental_features = {
@@ -1896,6 +1896,12 @@ in {
       ];#listeners
     };#settings
   };#matrix-synapse
+
+  # Automatically copy and chown the bridge registration file before Synapse boots
+  systemd.services.matrix-synapse.preStart = ''
+    cp -f /var/lib/mautrix-telegram/telegram-registration.yaml /var/lib/matrix-synapse/telegram-registration.yaml
+    chown matrix-synapse:matrix-synapse /var/lib/matrix-synapse/telegram-registration.yaml
+  '';
 
   # 3. Automatically provision PostgreSQL for Synapse
   services.postgresql = {
