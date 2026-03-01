@@ -33,10 +33,6 @@ in {
   };
   sops.secrets.telegram_env = {};
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "olm-3.2.16"
-  ];
-
 
   # 1. Open the necessary firewall ports
   #networking.firewall.allowedTCPPorts = [ 80 443 8448 ];

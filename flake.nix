@@ -21,6 +21,9 @@
       config = {
         allowUnfree = true;
         allowUnfreePredicate = (pkg: true);
+        permittedInsecurePackages = [
+          "olm-3.2.16"
+        ];
       };
     };
   in
