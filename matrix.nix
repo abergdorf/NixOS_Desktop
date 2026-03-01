@@ -76,9 +76,9 @@ in {
 
       #extraConfigFiles = [ config.sops.templates."synapse_turn.yaml".path ];
 
-      app_service_config_files = [
-        "/var/lib/mautrix-telegram/telegram-registration.yaml"
-      ];
+      #app_service_config_files = [
+      #  "/var/lib/mautrix-telegram/telegram-registration.yaml"
+      #];
 
       # --- Enable Modern LiveKit/Element Call ---
       experimental_features = {
@@ -244,6 +244,9 @@ services.mautrix-telegram = {
         id = "telegram";
         bot_avatar = "mxc://maunium.net/tJCRmUyJDsgRNgqhOgoiHWbX";
       };
+      telegram = {
+        api_id = 32823260;
+      }
       bridge = {
         relay_user_distinguishers = [];
         permissions = {
