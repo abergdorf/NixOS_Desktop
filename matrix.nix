@@ -246,7 +246,7 @@ services.mautrix-telegram = {
       };
       telegram = {
         api_id = 32823260;
-      }
+      };
       bridge = {
         relay_user_distinguishers = [];
         permissions = {
