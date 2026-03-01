@@ -76,10 +76,6 @@ in {
 
       #extraConfigFiles = [ config.sops.templates."synapse_turn.yaml".path ];
 
-      app_service_config_files = [
-        "/var/lib/matrix-synapse/telegram-registration.yaml"
-      ];
-
       # --- Enable Modern LiveKit/Element Call ---
       experimental_features = {
         msc3266_enabled = true;
@@ -230,6 +226,7 @@ in {
 
 services.mautrix-telegram = {
     enable = true;
+    registerToSynapse = true;
     environmentFile = config.sops.secrets.telegram_env.path;
     settings = {
       homeserver = {
