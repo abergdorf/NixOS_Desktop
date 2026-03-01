@@ -227,7 +227,6 @@ in {
 services.mautrix-telegram = {
     enable = true;
     registerToSynapse = true;
-    environmentFile = config.sops.secrets.telegram_env.path;
     settings = {
       homeserver = {
         address = "http://127.0.0.1:8008";
