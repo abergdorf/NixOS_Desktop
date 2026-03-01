@@ -31,7 +31,7 @@ in {
   sops.secrets.livekit_key = {
     mode = "0444";
   };
-  sops.secrets.telegram_env = {
+  sops.secrets.telegram_api_hash = {
     owner = "mautrix-telegram";
   };
 
@@ -243,7 +243,7 @@ services.mautrix-telegram = {
       };
       telegram = {
         api_id = 32823260;
-        api_hash = "placeholder_for_sops_override";
+        api_hash = "REPLACE_ME_AT_RUNTIME";
       };
       bridge = {
         relay_user_distinguishers = [];
@@ -254,5 +254,10 @@ services.mautrix-telegram = {
       };
     };
   };
+
+systemd.services.mautrix-telegram.preStart = pkgs.lib.mkAfter ''
+    HASH=$(cat ${config.sops.secrets.telegram_api_hash.path})
+    sed -i "s/REPLACE_ME_AT_RUNTIME/$HASH/" /var/lib/mautrix-telegram/config.yaml
+  '';
 
 }
