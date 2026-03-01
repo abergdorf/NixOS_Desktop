@@ -37,6 +37,7 @@
     #social
     telegram-desktop
     discord
+    element-desktop
 
     #zsh-related
     starship

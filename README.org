@@ -166,6 +166,7 @@ This is an attempt to put my nix files in this org-mode file
     #social
     telegram-desktop
     discord
+    element-desktop
 
     #zsh-related
     starship
