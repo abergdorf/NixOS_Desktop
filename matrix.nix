@@ -109,10 +109,11 @@ in {
   # 3. Automatically provision PostgreSQL for Synapse
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "matrix-synapse" "mautrix-telegram" ];
+    ensureDatabases = [ "matrix-synapse" "mautrix-telegram" "mautrix-discord"];
     ensureUsers = [
       { name = "matrix-synapse"; ensureDBOwnership = true; }
       { name = "mautrix-telegram"; ensureDBOwnership = true; }
+      { name = "mautrix-discord"; ensureDBOwnership = true; }
       ];
   };
 
@@ -260,5 +261,25 @@ services.mautrix-telegram = {
     };
   };
 
-
+services.mautrix-discord = {
+    enable = true;
+    registerToSynapse = true; # Automatically adds the registration file to Synapse
+    settings = {
+      homeserver = {
+        address = "http://127.0.0.1:8008";
+        domain = domain;
+      };
+      appservice = {
+        address = "http://127.0.0.1:8082";
+        port = 8082;
+        database = "postgresql:///mautrix-discord?host=/run/postgresql";
+        hostname = "127.0.0.1";
+      };
+      bridge = {
+        permissions = {
+          "@andrew:${domain}" = "admin";
+        };
+      };
+    };
+  };
 }
