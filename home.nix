@@ -37,7 +37,8 @@
     #social
     telegram-desktop
     discord
-    element-desktop
+    (element-desktop.override {
+      commandLineArgs = "--password-store=gnome-libsecret";})
 
     #zsh-related
     starship

@@ -166,7 +166,8 @@ This is an attempt to put my nix files in this org-mode file
     #social
     telegram-desktop
     discord
-    element-desktop
+    (element-desktop.override {
+      commandLineArgs = "--password-store=gnome-libsecret";})
 
     #zsh-related
     starship
