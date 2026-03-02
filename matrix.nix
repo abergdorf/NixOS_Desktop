@@ -263,7 +263,7 @@ services.mautrix-telegram = {
 
 services.mautrix-discord = {
     enable = true;
-    registerToSynapse = true; # Automatically adds the registration file to Synapse
+    registerToSynapse = true; # Automatically hooks the registration file into Synapse
     settings = {
       homeserver = {
         address = "http://127.0.0.1:8008";
@@ -271,9 +271,13 @@ services.mautrix-discord = {
       };
       appservice = {
         address = "http://127.0.0.1:8082";
-        port = 8082;
-        database = "postgresql:///mautrix-discord?host=/run/postgresql";
         hostname = "127.0.0.1";
+        port = 8082;
+        id = "discord";
+      };
+      database = {
+        type = "postgres";
+        uri = "postgresql:///mautrix-discord?host=/run/postgresql";
       };
       bridge = {
         permissions = {
