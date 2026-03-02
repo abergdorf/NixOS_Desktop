@@ -260,9 +260,5 @@ services.mautrix-telegram = {
     };
   };
 
-systemd.services.mautrix-telegram.preStart = pkgs.lib.mkAfter ''
-    HASH=$(cat ${config.sops.secrets.telegram_api_hash.path})
-    sed -i "s/REPLACE_ME_AT_RUNTIME/$HASH/" /var/lib/mautrix-telegram/config.yaml
-  '';
 
 }
