@@ -31,10 +31,15 @@ in {
   sops.secrets.livekit_key = {
     mode = "0444";
   };
-  sops.secrets.telegram_api_hash = {
+  sops.secrets.telegram_api_hash = {};
+
+  sops.templates."mautrix-telegram.env" = {
+    content = ''
+      MAUTRIX_TELEGRAM_TELEGRAM_API_HASH=${config.sops.placeholder.telegram_api_hash}
+      MAUTRIX_TELEGRAM_API_HASH=${config.sops.placeholder.telegram_api_hash}
+    '';
     owner = "mautrix-telegram";
   };
-
 
   # 1. Open the necessary firewall ports
   #networking.firewall.allowedTCPPorts = [ 80 443 8448 ];
@@ -226,6 +231,7 @@ in {
 
 services.mautrix-telegram = {
     enable = true;
+    environmentFile = config.sops.templates."mautrix-telegram.env".path;
     registerToSynapse = true;
     settings = {
       homeserver = {
