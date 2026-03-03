@@ -1914,14 +1914,14 @@ in {
     ensureDatabases = [ "matrix-synapse"
                         "mautrix-telegram"
                         "mautrix-discord"
-                        "mautrix-facebook"
-                        "mautrix-instagram"];
+                        "mautrix-meta-facebook"
+                        "mautrix-meta-instagram"];
     ensureUsers = [
       { name = "matrix-synapse"; ensureDBOwnership = true; }
       { name = "mautrix-telegram"; ensureDBOwnership = true; }
       { name = "mautrix-discord"; ensureDBOwnership = true; }
-      { name = "mautrix-facebook"; ensureDBOwnership = true; }
-      { name = "mautrix-instagram"; ensureDBOwnership = true; }
+      { name = "mautrix-meta-facebook"; ensureDBOwnership = true; }
+      { name = "mautrix-meta-instagram"; ensureDBOwnership = true; }
       ];
   };
 
