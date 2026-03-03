@@ -41,9 +41,6 @@ in {
     owner = "mautrix-telegram";
   };
 
-  # 1. Open the necessary firewall ports
-  #networking.firewall.allowedTCPPorts = [ 80 443 8448 ];
-
   # 2. Configure the Matrix Synapse Service
   services.matrix-synapse = {
     enable = true;
@@ -109,11 +106,17 @@ in {
   # 3. Automatically provision PostgreSQL for Synapse
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "matrix-synapse" "mautrix-telegram" "mautrix-discord"];
+    ensureDatabases = [ "matrix-synapse"
+                        "mautrix-telegram"
+                        "mautrix-discord"
+                        "mautrix-facebook"
+                        "mautrix-instagram"];
     ensureUsers = [
       { name = "matrix-synapse"; ensureDBOwnership = true; }
       { name = "mautrix-telegram"; ensureDBOwnership = true; }
       { name = "mautrix-discord"; ensureDBOwnership = true; }
+      { name = "mautrix-facebook"; ensureDBOwnership = true; }
+      { name = "mautrix-instagram"; ensureDBOwnership = true; }
       ];
   };
 
@@ -146,18 +149,15 @@ in {
         enableACME = true;
         acmeRoot = null;
 
-        # --- NEW: Route authorization requests to the JWT bridge (Port 8080) ---
         locations."^~ /livekit/jwt/" = {
           proxyPass = "http://127.0.0.1:8080/";
         };
 
-        # --- NEW: Route active video streams to the LiveKit SFU (Port 7880) ---
         locations."^~ /livekit/sfu/" = {
           proxyPass = "http://127.0.0.1:7880/";
           proxyWebsockets = true; # Crucial for LiveKit!
         };
 
-        # --- EXISTING: The Catch-All for standard Synapse chat traffic ---
         locations."/" = {
           proxyPass = "http://127.0.0.1:8008";
           extraConfig = ''
@@ -170,6 +170,7 @@ in {
       };
     };
   };
+
  # 6. Cloudflare Tunnel (Bypass ISP Firewall)
   services.cloudflared = {
     enable = true;
@@ -228,7 +229,6 @@ in {
 
   # Allow your users to create video rooms
   systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = "cellochem.vip";
-
 
 services.mautrix-telegram = {
     enable = true;
@@ -289,4 +289,67 @@ services.mautrix-discord = {
       };
     };
   };
+
+services.mautrix-meta.instances.facebook = {
+    enable = true;
+    registerToSynapse = true;
+    settings = {
+      homeserver = {
+        address = "http://127.0.0.1:8008";
+        domain = domain;
+      };
+      appservice = {
+        address = "http://127.0.0.1:8083"; # Port 8083
+        hostname = "127.0.0.1";
+        port = 8083;
+        id = "facebook";
+        as_token = "fcdc41a93cbdad5073ab3e003b319bae4a3246bc60b07c098c852f428d166c0f";
+        hs_token = "be8e5e49ca39e8ebfead60b1e22db9471348f787d3ced5c87630c5abbc0d0e73";
+        database = {
+          type = "postgres";
+          uri = "postgresql:///mautrix-facebook?host=/run/postgresql";
+        };
+      };
+      meta = {
+        mode = "facebook";
+      };
+      bridge = {
+        permissions = {
+          "@andrew:${domain}" = "admin";
+        };
+      };
+    };
+  };
+
+services.mautrix-meta.instances.instagram = {
+    enable = true;
+    registerToSynapse = true;
+    settings = {
+      homeserver = {
+        address = "http://127.0.0.1:8008";
+        domain = domain;
+      };
+      appservice = {
+        address = "http://127.0.0.1:8084"; # Port 8084
+        hostname = "127.0.0.1";
+        port = 8084;
+        id = "instagram";
+        as_token = "2ec74e2aa33a769f3e8a4f505f588df51d5fdba7428593455fe4de8d77ee38b6";
+        hs_token = "8bab100ff56abc42bac64a0bf5da9180bcf07a1608ab57810a189aeaa23544da";
+        database = {
+          type = "postgres";
+          uri = "postgresql:///mautrix-instagram?host=/run/postgresql";
+        };
+      };
+      meta = {
+        mode = "instagram";
+      };
+      bridge = {
+        permissions = {
+          "@andrew:${domain}" = "admin";
+        };
+      };
+    };
+  };
+
 }
