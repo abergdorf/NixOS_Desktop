@@ -314,7 +314,7 @@ services.mautrix-meta.instances.facebook = {
       };
       database = {
           type = "postgres";
-          uri = "postgresql:///mautrix-facebook?host=/run/postgresql";
+          uri = "postgresql:///mautrix-meta-facebook?host=/run/postgresql";
         };
       network = {
         mode = "facebook";
@@ -351,7 +351,7 @@ services.mautrix-meta.instances.instagram = {
       };
       database = {
           type = "postgres";
-          uri = "postgresql:///mautrix-instagram?host=/run/postgresql";
+          uri = "postgresql:///mautrix-meta-instagram?host=/run/postgresql";
         };
       network = {
         mode = "instagram";
