@@ -120,6 +120,15 @@ in {
       ];
   };
 
+services.postgresqlBackup = {
+    enable = true;
+    location = "/var/backup/postgresql"; # Where to save the files locally
+    backupAll = true;                    # Backs up Synapse and all bridges
+    compression = "zstd";                # Compresses them to save disk space
+    startAt = "*-*-* 02:00:00";          # Runs automatically every day at 2:00 AM
+    backupRetention = 7;                 # Keeps backup files for 7 days
+  };
+
   # 4. Nginx Reverse Proxy & Matrix Delegation
   services.nginx = {
     enable = true;
