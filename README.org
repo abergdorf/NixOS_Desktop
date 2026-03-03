@@ -151,6 +151,7 @@ This is an attempt to put my nix files in this org-mode file
     gnumake
     openvpn
     gh
+    openssl
     nh
 
     #fonts and icons
@@ -2067,11 +2068,14 @@ services.mautrix-discord = {
         hostname = "127.0.0.1";
         port = 8082;
         id = "discord";
-      };
-      database = {
+        as_token = "fcabec7b24d0dc60d96838b081507c15cb828088b836ce63fcdb1d901addbc51";
+        hs_token = "5f7e2557ae54eeefea2760df2179bf0d505597ad48e9b6376e4cf5d195af1212";
+        database = {
         type = "postgres";
         uri = "postgresql:///mautrix-discord?host=/run/postgresql";
       };
+      };
+
       bridge = {
         permissions = {
           "@andrew:${domain}" = "admin";

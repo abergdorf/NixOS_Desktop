@@ -22,6 +22,7 @@
     gnumake
     openvpn
     gh
+    openssl
     nh
 
     #fonts and icons
