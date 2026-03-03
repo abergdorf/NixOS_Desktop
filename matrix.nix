@@ -303,14 +303,20 @@ services.mautrix-meta.instances.facebook = {
         hostname = "127.0.0.1";
         port = 8083;
         id = "facebook";
+        bot = {
+          username = "facebookbot";
+          displayname = "Facebook Bridge";
+          avatar = "mxc://maunium.net/ygtkteZsXnGJLJHRchUwYWak";
+        };
         as_token = "fcdc41a93cbdad5073ab3e003b319bae4a3246bc60b07c098c852f428d166c0f";
         hs_token = "be8e5e49ca39e8ebfead60b1e22db9471348f787d3ced5c87630c5abbc0d0e73";
-        database = {
+
+      };
+      database = {
           type = "postgres";
           uri = "postgresql:///mautrix-facebook?host=/run/postgresql";
         };
-      };
-      meta = {
+      network = {
         mode = "facebook";
       };
       bridge = {
@@ -334,14 +340,20 @@ services.mautrix-meta.instances.instagram = {
         hostname = "127.0.0.1";
         port = 8084;
         id = "instagram";
+        bot = {
+          username = "instagrambot";
+          displayname = "Instagram Bridge";
+          avatar = "mxc://maunium.net/JxjlbZUlCPULEeHZSwleUXQv";
+        };
         as_token = "2ec74e2aa33a769f3e8a4f505f588df51d5fdba7428593455fe4de8d77ee38b6";
         hs_token = "8bab100ff56abc42bac64a0bf5da9180bcf07a1608ab57810a189aeaa23544da";
-        database = {
+
+      };
+      database = {
           type = "postgres";
           uri = "postgresql:///mautrix-instagram?host=/run/postgresql";
         };
-      };
-      meta = {
+      network = {
         mode = "instagram";
       };
       bridge = {
