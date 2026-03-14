@@ -126,8 +126,11 @@ services.postgresqlBackup = {
     backupAll = true;                    # Backs up Synapse and all bridges
     compression = "zstd";                # Compresses them to save disk space
     startAt = "*-*-* 02:00:00";          # Runs automatically every day at 2:00 AM
-    backupRetention = 7;                 # Keeps backup files for 7 days
   };
+
+systemd.tmpfiles.rules = [
+    "d /var/backup/postgresql 0700 postgres postgres 7d"
+  ];
 
   # 4. Nginx Reverse Proxy & Matrix Delegation
   services.nginx = {

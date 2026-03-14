@@ -786,6 +786,37 @@ Do not change this value unless you have manually inspected all the changes it w
     options = [ "defaults" "users" "nofail" ]; # Common options, "nofail" is useful for HDDs
   };
 
+#service needed to get network drive
+services.samba = {
+  enable = true;
+  securityType = "user";
+  extraConfig = ''
+    workgroup = WORKGROUP
+    server string = NixOS-NAS
+    netbios name = NixOS-NAS
+    security = user
+    # This allows Windows to discover the share more easily
+    hosts allow = 192.168.1. 127.0.0.1 localhost
+    hosts deny = 0.0.0.0/0
+  '';
+  shares = {
+    storage = {
+      path = "/mnt/storage";
+      browseable = "yes";
+      "read only" = "no";
+      "guest ok" = "no";
+      "create mask" = "0644";
+      "directory mask" = "0755";
+      "force user" = "andrew"; # Use your NixOS username
+    };
+  };
+};
+
+# Enable WSDD to make the drive show up in Windows "Network" explorer
+services.samba-wsdd.enable = true;
+networking.firewall.allowPing = true;
+networking.firewall.allowedTCPPorts = [ 445 139 ];
+networking.firewall.allowedUDPPorts = [ 137 138 ];
 }
 
 #+end_src
@@ -1931,8 +1962,11 @@ services.postgresqlBackup = {
     backupAll = true;                    # Backs up Synapse and all bridges
     compression = "zstd";                # Compresses them to save disk space
     startAt = "*-*-* 02:00:00";          # Runs automatically every day at 2:00 AM
-    backupRetention = 7;                 # Keeps backup files for 7 days
   };
+
+systemd.tmpfiles.rules = [
+    "d /var/backup/postgresql 0700 postgres postgres 7d"
+  ];
 #+end_src
 *** nginx
 #+begin_src nix :tangle matrix.nix
