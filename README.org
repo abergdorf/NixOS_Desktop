@@ -371,6 +371,10 @@ systemd = {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  #appimage setup
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
+  
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -1198,7 +1202,7 @@ animations {
 
 # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
 dwindle {
-    pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+    #pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
     preserve_split = true # You probably want this
 }
 
@@ -1269,7 +1273,7 @@ bind = $mainMod, F, exec, $fileManager
 bind = $mainMod, V, togglefloating,
 bind = $mainMod, R, exec, $menu
 bind = $mainMod, P, pseudo, # dwindle
-bind = $mainMod, J, togglesplit, # dwindle
+#bind = $mainMod, J, togglesplit, # dwindle
 bind = $mainMod, B, exec, $browser       #old xdg-open "https://"
 bind = $mainMod SHIFT, R, exec, pkill waybar && hyprctl dispatch exec waybar
 bind = $mainMod SHIFT, H, exec, hyprctl reload
@@ -1346,12 +1350,12 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 
 # Ignore maximize requests from apps. You'll probably like this.
 #+begin_src conf :tangle ~/.config/hypr/hyprland.conf
-windowrule = suppressevent maximize, class:.*
+#windowrule = suppressevent maximize, class:.*
 
 # Fix some dragging issues with XWayland
-windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
-windowrule = workspace 1, class:^(zen*)$
-windowrule = workspace 2, class:^([Ee]macs)$
+#windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
+#windowrule = workspace 1, class:^(zen*)$
+#windowrule = workspace 2, class:^([Ee]macs)$
 
 
 #+end_src
