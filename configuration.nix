@@ -264,11 +264,11 @@ sops = {
 ];
 
 
-environment.systemPackages = [
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+#environment.systemPackages = [
+#    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+#  ];
 #
-# programs.noctalia.enable = true;
+ programs.noctalia.enable = true;
 
 environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
