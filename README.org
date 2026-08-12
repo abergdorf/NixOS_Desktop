@@ -619,9 +619,9 @@ Install packages that are system wide. Things like neovim wget emacs git
 ];
 
 
-#environment.systemPackages = [
-#    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-#  ];
+environment.systemPackages = [
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 #
 # programs.noctalia.enable = true;
 
