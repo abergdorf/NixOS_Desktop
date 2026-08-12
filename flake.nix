@@ -12,9 +12,11 @@
     pia.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:abergdorf/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
+    noctalia.url = "github:noctalia-dev/noctalia";
+    noctalia.inputs.nixpkgs.follows = "nixpkgs"; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, noctalia, ... }:
   let
     pkgs = import nixpkgs {
       system = "x86_64-linux";

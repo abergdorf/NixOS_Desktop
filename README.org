@@ -65,13 +65,11 @@ This is an attempt to put my nix files in this org-mode file
     pia.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:abergdorf/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
-    noctalia = {
-      url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs"; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
-    };
+    noctalia.url = "github:noctalia-dev/noctalia";
+    noctalia.inputs.nixpkgs.follows = "nixpkgs"; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, noctalia, ... }:
   let
     pkgs = import nixpkgs {
       system = "x86_64-linux";
@@ -621,9 +619,11 @@ Install packages that are system wide. Things like neovim wget emacs git
 ];
 
 
-environment.systemPackages = [
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+#environment.systemPackages = [
+#    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+#  ];
+#
+# programs.noctalia.enable = true;
 
 environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
