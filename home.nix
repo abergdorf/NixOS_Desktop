@@ -69,6 +69,7 @@
     obs-studio
     qbittorrent
     resilio-sync
+    tauon
 
     floorp-bin
 

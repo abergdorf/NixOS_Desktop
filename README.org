@@ -199,6 +199,7 @@ This is an attempt to put my nix files in this org-mode file
     obs-studio
     qbittorrent
     resilio-sync
+    tauon
 
     floorp-bin
 
