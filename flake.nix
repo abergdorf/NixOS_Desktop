@@ -54,6 +54,14 @@
           })
         ];
       };
+      white_mamba = nixpkgs.lib.nixosSystem {
+	system = "x86_64-linux";
+	specialArgs = {inherit inputs; };
+	modules = [
+	  ./hosts/white_mamba/configuration.nix
+	  ./hosts/white_mamba/hardware-configuration.nix
+	];
+      };
     };
   };
 }
