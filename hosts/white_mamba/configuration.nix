@@ -12,7 +12,9 @@
   nix = {
     settings = { 
      auto-optimise-store = true;
-     experimental-features = ["nix-command","flakes"];
+     experimental-features = ["nix-command"
+				"flakes"];
+  };
 };
 
   # Bootloader.
@@ -71,7 +73,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    nvim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     git
     niri
@@ -83,6 +85,11 @@
     fuzzel
     fzf
     home-manager
+    firefox
+    fd
+    ripgrep
+    symbola
+
     
   ];
 
@@ -105,8 +112,11 @@ services.greetd = {
 programs.noctalia.enable = true;
 
   # List services that you want to enable:
-services.emacs.enable = true;
-
+services.emacs = {
+  enable = true;
+  extraOptions = [ "--daemon"  ];
+};
+systemd.user.services.emacs.serviceConfig.Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/%u/bin";
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
