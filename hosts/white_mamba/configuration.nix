@@ -60,7 +60,7 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."andrew" = {
+  users.users."nixandrew" = {
     isNormalUser = true;
     description = "Andrew";
     extraGroups = [ "networkmanager" "wheel" ];
@@ -106,7 +106,6 @@
     gcc
     cmake
     python3
-    dolphin
 
     
   ];
@@ -133,7 +132,6 @@ programs.noctalia.enable = true;
 services.emacs = {
   enable = true;
 };
-systemd.user.services.emacs.serviceConfig.Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/%u/bin";
 
 services.libinput.enable = true;
 
