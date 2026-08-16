@@ -60,6 +60,13 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+   users.users."andrew" = {
+    isNormalUser = true;
+    description = "Andrew";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [];
+  };
+
   users.users."nixandrew" = {
     isNormalUser = true;
     description = "Andrew";
@@ -122,7 +129,7 @@ services.greetd = {
 	enable = true;
 	settings = {
 	  default_session = { command = "${config.programs.niri.package}/bin/niri-session";
-		user = "andrew";
+		user = "nixandrew";
 		};
 	};
  };
