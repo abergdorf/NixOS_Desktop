@@ -93,7 +93,7 @@
     wget
     git
     niri
-    emacs
+    emacs-pgtk
     polkit
     gnome-keyring
     alacritty
