@@ -114,6 +114,7 @@
     gcc
     cmake
     python3
+    xwayland-satellite
     starship
 
     
@@ -143,6 +144,12 @@ services.emacs = {
 };
 
 services.libinput.enable = true;
+
+programs.steam = {
+  enable = true;
+  remotePlay.openFirewall= true;
+
+};
 
 programs.zsh = {
   enable = true;

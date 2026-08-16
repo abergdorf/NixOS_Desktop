@@ -69,6 +69,7 @@
     qbittorrent
     resilio-sync
     tauon
+    steam
 
     floorp-bin
 
@@ -111,6 +112,25 @@ home.sessionVariables = {
     vterm
   ];
 
+   programs.vesktop= {
+    enable = true;
+    vencord.settings = {
+  autoUpdate = true;
+  autoUpdateNotification = false;
+  disableMinSize = true;
+  notifyAboutUpdates = false;
+  plugins = {
+    FakeNitro = {
+      enabled = true;
+    };
+    MessageLogger = {
+      enabled = true;
+      ignoreSelf = true;
+    };
+  };
+  useQuickCss = true;
+    };
+   };
 
   # Let Home Manager install and manage itself.
    programs.home-manager.enable = true;
