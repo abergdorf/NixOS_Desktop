@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./filesystems.nix
     ];
   nix = {
     settings = { 
@@ -105,6 +106,7 @@
     gcc
     cmake
     python3
+    dolphin
 
     
   ];

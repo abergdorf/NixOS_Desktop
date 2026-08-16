@@ -7,8 +7,14 @@
     options = ["defaults" "users"];
   };
 
+fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/b6a563be-844e-4d8d-a5f7-ba8162a6ae50";
+    fsType = "btrfs";
+    options = ["defaults" "users"];
+  };
+
 fileSystems."/Z" = {
-    device = "/dev/disk/by-uuid/B81087B24107AE8B0";
+    device = "/dev/disk/by-uuid/B8107B24107AE8B0";
     fsType = "ntfs";
     options = ["defaults" "users" "nofail"]; #nofail for HDD
   };
