@@ -10,7 +10,7 @@
 fileSystems."/home" = {
     device = "/dev/disk/by-uuid/b6a563be-844e-4d8d-a5f7-ba8162a6ae50";
     fsType = "btrfs";
-    options = ["defaults" "exec" "users" "compress=zstd"];
+    options = ["defaults" "users" "compress=zstd" "exec"];
   };
 
 fileSystems."/Z" = {
