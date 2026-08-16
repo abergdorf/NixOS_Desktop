@@ -70,6 +70,13 @@
   nixpkgs.config.allowUnfree = true;
   security.polkit.enable = true;
 
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    dejavu_fonts
+  ];
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -89,6 +96,15 @@
     fd
     ripgrep
     symbola
+    bibata-cursors
+    zsh
+    oh-my-zsh
+    gparted
+    openssh
+    seahorse
+    gcc
+    cmake
+    python3
 
     
   ];
@@ -114,9 +130,24 @@ programs.noctalia.enable = true;
   # List services that you want to enable:
 services.emacs = {
   enable = true;
-  extraOptions = [ "--daemon"  ];
 };
 systemd.user.services.emacs.serviceConfig.Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/%u/bin";
+
+services.libinput.enable = true;
+
+programs.zsh = {
+  enable = true;
+  enableCompletion = true;
+  ohMyZsh = {
+    enable = true;
+    plugins = ["git"];
+    theme = "agnoster";
+  };
+  autosuggestions.enable = true;
+  syntaxHighlighting.enable = true;
+};
+
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
@@ -132,6 +163,7 @@ systemd.user.services.emacs.serviceConfig.Environment = "PATH=/run/current-syste
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "26.05"; # Did you read the comment?
+
+system.stateVersion = "26.05"; # Did you read the comment?
 
 }
