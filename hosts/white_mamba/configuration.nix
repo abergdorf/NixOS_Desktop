@@ -72,6 +72,7 @@
     description = "Andrew";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
+    shell = pkgs.zsh;
   };
 
   # Allow unfree packages
@@ -113,6 +114,7 @@
     gcc
     cmake
     python3
+    starship
 
     
   ];
