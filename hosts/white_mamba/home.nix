@@ -4,8 +4,6 @@
   home.username = "nixandrew";
   home.homeDirectory = "/home/nixandrew";
 
-  home.stateVersion = "26.11"; # Please read the comment before changing.
-
   home.packages = with pkgs; [
 
     #dependencies
@@ -23,6 +21,7 @@
     gh
     openssl
     nh
+    pv
 
     #fonts and icons
     bibata-cursors
@@ -107,7 +106,6 @@ home.sessionVariables = {
     QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 
-   programs.waybar.enable = true;
    programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm
   ];
@@ -134,4 +132,7 @@ home.sessionVariables = {
 
   # Let Home Manager install and manage itself.
    programs.home-manager.enable = true;
-} #final bracket for home.nix!
+
+home.stateVersion = "26.11"; # Please read the comment before changing.
+
+} #end of home.nix!
