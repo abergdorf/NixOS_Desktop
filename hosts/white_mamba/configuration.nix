@@ -33,8 +33,6 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
-  security.polkit.enable = true;
-
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
@@ -103,6 +101,7 @@ programs.noctalia.enable = true;
     niri
     emacs-pgtk
     polkit
+    polkit_gnome
     gnome-keyring
     alacritty
     ghostty
@@ -163,6 +162,41 @@ programs.zsh = {
   autosuggestions.enable = true;
   syntaxHighlighting.enable = true;
 };
+
+nix.gc = {  #garbage-collect nix-store
+automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+    };
+
+   # Allow unfree packages
+
+
+  #Enable polkit (policy kit)
+  security.polkit.enable = true;
+
+systemd = {
+  user.services.polkit-gnome-authentication-agent-1 = {
+    description = "polkit-gnome-authentication-agent-1";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+  };
+  settings.Manager = {
+     DefaultTimeoutStopSec=10;
+   };
+};
+
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
 system.stateVersion = "26.05"; # Did you read the comment?
 

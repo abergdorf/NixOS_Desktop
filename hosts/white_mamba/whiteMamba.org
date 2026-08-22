@@ -82,7 +82,6 @@ For my whiteMamba desktop
   # Enable networking
   networking.networkmanager.enable = true;
 
-  security.polkit.enable = true;
 #+end_src
 ** Timezone and Locale
 #+begin_src nix :tangle configuration.nix
@@ -170,6 +169,7 @@ programs.noctalia.enable = true;
     niri
     emacs-pgtk
     polkit
+    polkit_gnome
     gnome-keyring
     alacritty
     ghostty
@@ -233,6 +233,41 @@ programs.zsh = {
   autosuggestions.enable = true;
   syntaxHighlighting.enable = true;
 };
+
+nix.gc = {  #garbage-collect nix-store
+automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+    };
+
+   # Allow unfree packages
+
+
+  #Enable polkit (policy kit)
+  security.polkit.enable = true;
+
+systemd = {
+  user.services.polkit-gnome-authentication-agent-1 = {
+    description = "polkit-gnome-authentication-agent-1";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+  };
+  settings.Manager = {
+     DefaultTimeoutStopSec=10;
+   };
+};
+
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
 
 #+end_src
@@ -623,6 +658,7 @@ input {
 spawn-at-startup "noctalia"
 spawn-at-startup "element"
 spawn-at-startup "vesktop"
+spawn-at-startup "steam"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -843,7 +879,7 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    Mod+B hotkey-overlay-title="Open a browser: firefox" {spawn "firefox"; }
+    Mod+B hotkey-overlay-title="Open a browser: floorp" {spawn "floorp"; }
     Mod+E hotkey-overlay-title="Open an editor: emacs" {spawn "emacs"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
