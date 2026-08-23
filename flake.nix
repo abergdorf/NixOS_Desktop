@@ -55,18 +55,18 @@
         ];
       };
       white_mamba = nixpkgs.lib.nixosSystem {
-	system = "x86_64-linux";
-	specialArgs = {inherit inputs; };
-	modules = [
-	  ./hosts/white_mamba/configuration.nix
-	  ./hosts/white_mamba/hardware-configuration.nix
-      home-manager.nixosModules.home-manager
+	      system = "x86_64-linux";
+	      specialArgs = {inherit inputs; };
+	      modules = [
+	        ./hosts/white_mamba/configuration.nix
+	        ./hosts/white_mamba/hardware-configuration.nix
+          home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.nixandrew = ./hosts/white_mamba/home.nix;
           }
-	];
+	      ];
       };
     };
   };
