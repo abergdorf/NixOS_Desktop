@@ -22,6 +22,7 @@
     openssl
     nh
     pv
+    direnv
 
     #fonts and icons
     bibata-cursors
