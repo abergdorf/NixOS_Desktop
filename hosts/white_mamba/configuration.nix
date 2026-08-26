@@ -143,6 +143,8 @@ services.emacs = {
   enable = true;
 };
 
+services.resilio.enable = true;
+
 services.libinput.enable = true;
 
 programs.steam = {

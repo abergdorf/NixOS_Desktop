@@ -111,6 +111,7 @@ home.sessionVariables = {
     vterm
   ];
 
+
    programs.vesktop= {
     enable = true;
     vencord.settings = {

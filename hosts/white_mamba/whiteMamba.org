@@ -215,6 +215,8 @@ services.emacs = {
   enable = true;
 };
 
+services.resilio.enable = true;
+
 services.libinput.enable = true;
 
 programs.steam = {
@@ -438,6 +440,7 @@ home.sessionVariables = {
    programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm
   ];
+
 
    programs.vesktop= {
     enable = true;
