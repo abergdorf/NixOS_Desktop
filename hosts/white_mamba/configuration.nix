@@ -150,7 +150,8 @@ services.resilio = {
   enableWebUI = true;
   httpListenAddr = "[::1]";
   httpListenPort = 8888;
-}
+  storagePath = "/var/lib/resilio-sync";
+};
 
 services.libinput.enable = true;
 
