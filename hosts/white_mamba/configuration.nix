@@ -143,7 +143,14 @@ services.emacs = {
   enable = true;
 };
 
-services.resilio.enable = true;
+services.resilio = {
+  enable = true;
+  deviceName = "whiteMamba";
+  directoryRoot = "~/Documents";
+  enableWebUI = true;
+  httpListenAddr = "[::1]";
+  httpListenPort = 8888;
+}
 
 services.libinput.enable = true;
 
