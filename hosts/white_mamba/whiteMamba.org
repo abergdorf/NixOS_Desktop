@@ -15,12 +15,13 @@
   - [[#users][Users]]
   - [[#system-packages][System Packages]]
   - [[#system-services-and-daemons][System Services and Daemons]]
+  - [[#environment-variables][Environment Variables]]
   - [[#system-state-version][System State Version]]
 - [[#filesystemnix][FILESYSTEM.NIX]]
 - [[#homenix][HOME.NIX]]
   - [[#startup][Startup]]
   - [[#packages][Packages]]
-  - [[#environment-variables][Environment Variables]]
+  - [[#environment-variables-1][Environment Variables]]
   - [[#programs-and-services][Programs and Services]]
   - [[#home-manager-state-version][Home-manager State Version]]
   - [[#end-of-file][End of file]]
@@ -222,6 +223,7 @@ services.resilio = {
   enableWebUI = true;
   httpListenAddr = "[::1]";
   httpListenPort = 8888;
+  listeningPort = 44444;
   storagePath = "/var/lib/resilio-sync";
 };
 
@@ -229,6 +231,7 @@ services.libinput.enable = true;
 
 programs.steam = {
   enable = true;
+  gamescopeSession.enable = true;
   remotePlay.openFirewall= true;
 
 };
@@ -283,6 +286,38 @@ systemd = {
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+#+end_src
+** Environment Variables
+#+begin_src nix :tangle configuration.nix
+
+environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
+programs.direnv = {
+  enable = true;
+  nix-direnv.enable = true;
+};
+
+programs.zsh.interactiveShellInit = ''eval "$(direnv hook zsh)"''; #direnv shell
+xwayland.enable = true;
+
+gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+
+ # Extra Portal Configuration
+  xdg.portal = {
+    enable = true;
+    wlr.enable = false;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    configPackages = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal
+    ];
+    };
 
 
 #+end_src
@@ -373,6 +408,8 @@ Putting stuff in userspace
     #zsh-related
     starship
     fastfetch
+    killall
+
 
 
     #hyprland stuff
@@ -409,7 +446,60 @@ Putting stuff in userspace
     yt-dlp
     syncplay
 
-
+(pkgs.rWrapper.override {
+    packages = with pkgs.rPackages; [
+      ggplot2
+      plotly
+      tidyverse
+      languageserver
+      lintr
+      roxygen2
+      collections
+      rmarkdown
+      shiny
+      shinydashboard
+      shinythemes
+      stringi
+      stringr
+      xml2
+      dplyr
+      xts
+      DT
+      packrat
+      rsconnect
+      PKI
+      openssl
+      golem
+      enviPat
+    ];
+  })
+    (pkgs.rstudioWrapper.override {
+    packages = with pkgs.rPackages; [
+      ggplot2
+      plotly
+      tidyverse
+      languageserver
+      lintr
+      roxygen2
+      collections
+      rmarkdown
+      shiny
+      shinydashboard
+      shinythemes
+      stringi
+      stringr
+      xml2
+      dplyr
+      xts
+      DT
+      packrat
+      rsconnect
+      PKI
+      openssl
+      golem
+      enviPat
+    ];
+  })
     #python
     #(python314.withPackages (ppkgs: [
     #ppkgs.numpy

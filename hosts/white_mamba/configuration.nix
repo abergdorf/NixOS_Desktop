@@ -150,6 +150,7 @@ services.resilio = {
   enableWebUI = true;
   httpListenAddr = "[::1]";
   httpListenPort = 8888;
+  listeningPort = 44444;
   storagePath = "/var/lib/resilio-sync";
 };
 
@@ -157,6 +158,7 @@ services.libinput.enable = true;
 
 programs.steam = {
   enable = true;
+  gamescopeSession.enable = true;
   remotePlay.openFirewall= true;
 
 };
@@ -211,6 +213,34 @@ systemd = {
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
+programs.direnv = {
+  enable = true;
+  nix-direnv.enable = true;
+};
+
+programs.zsh.interactiveShellInit = ''eval "$(direnv hook zsh)"''; #direnv shell
+xwayland.enable = true;
+
+gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+
+ # Extra Portal Configuration
+  xdg.portal = {
+    enable = true;
+    wlr.enable = false;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    configPackages = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal
+    ];
+    };
 
 system.stateVersion = "26.05"; # Did you read the comment?
 
