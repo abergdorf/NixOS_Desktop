@@ -43,6 +43,8 @@
     #zsh-related
     starship
     fastfetch
+    killall
+
 
 
     #hyprland stuff
@@ -79,7 +81,60 @@
     yt-dlp
     syncplay
 
-
+(pkgs.rWrapper.override {
+    packages = with pkgs.rPackages; [
+      ggplot2
+      plotly
+      tidyverse
+      languageserver
+      lintr
+      roxygen2
+      collections
+      rmarkdown
+      shiny
+      shinydashboard
+      shinythemes
+      stringi
+      stringr
+      xml2
+      dplyr
+      xts
+      DT
+      packrat
+      rsconnect
+      PKI
+      openssl
+      golem
+      enviPat
+    ];
+  })
+    (pkgs.rstudioWrapper.override {
+    packages = with pkgs.rPackages; [
+      ggplot2
+      plotly
+      tidyverse
+      languageserver
+      lintr
+      roxygen2
+      collections
+      rmarkdown
+      shiny
+      shinydashboard
+      shinythemes
+      stringi
+      stringr
+      xml2
+      dplyr
+      xts
+      DT
+      packrat
+      rsconnect
+      PKI
+      openssl
+      golem
+      enviPat
+    ];
+  })
     #python
     #(python314.withPackages (ppkgs: [
     #ppkgs.numpy
