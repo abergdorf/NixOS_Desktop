@@ -152,6 +152,11 @@ qt = {
 
 gtk = {
   enable = true;
+  cursorTheme = {
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
+    size = 24;
+  };
   iconTheme = {
     name = "Adwaita-dark";
   };
@@ -161,6 +166,19 @@ home.sessionVariables = {
     EDITOR = "emacs";
     QT_QPA_PLATFORMTHEME = "qt6ct";
   };
+
+home.pointerCursor = {
+  package = pkgs.bibata-cursors;
+  name = "Bibata-Modern-Ice";
+  size = 24;
+  gtk.enable = true;
+  x11.enable = true;
+};
+
+dconf.settings."org/gnome/desktop/interface" = {
+  cursor-theme = "Bibata-Modern-Ice";
+  cursor-size = 24;
+};
 
    programs.emacs.extraPackages = epkgs: with epkgs; [
     vterm

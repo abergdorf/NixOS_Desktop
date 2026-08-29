@@ -59,13 +59,15 @@
 
 programs.niri.enable = true;
 services.greetd = {
-	enable = true;
-	settings = {
-	  default_session = { command = "${config.programs.niri.package}/bin/niri-session";
-		user = "nixandrew";
-		};
-	};
- };
+  enable = true;
+  settings = {
+    default_session = {
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd ${config.programs.niri.package}/bin/niri-session";
+      user = "greeter";
+    };
+  };
+};
+
 programs.noctalia.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -222,9 +224,9 @@ programs.direnv = {
 };
 
 programs.zsh.interactiveShellInit = ''eval "$(direnv hook zsh)"''; #direnv shell
-xwayland.enable = true;
+programs.xwayland.enable = true;
 
-gnupg.agent = {
+programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
@@ -241,6 +243,10 @@ gnupg.agent = {
       pkgs.xdg-desktop-portal
     ];
     };
+environment.variables = {
+  XCURSOR_THEME = "Bibata-Modern-Ice";
+  XCURSOR_SIZE = "24";
+};
 
 system.stateVersion = "26.05"; # Did you read the comment?
 
