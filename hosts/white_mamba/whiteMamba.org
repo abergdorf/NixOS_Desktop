@@ -120,7 +120,7 @@ services.greetd = {
   enable = true;
   settings = {
     default_session = {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd ${config.programs.niri.package}/bin/niri-session";
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${config.programs.niri.package}/bin/niri-session";
       user = "greeter";
     };
   };
@@ -442,6 +442,8 @@ Putting stuff in userspace
     resilio-sync
     tauon
     steam
+    bottles
+    protonup-qt
 
     floorp-bin
 
@@ -542,6 +544,7 @@ home.sessionVariables = {
   };
 
 home.pointerCursor = {
+  enable = true;
   package = pkgs.bibata-cursors;
   name = "Bibata-Modern-Ice";
   size = 24;

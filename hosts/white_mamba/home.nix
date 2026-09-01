@@ -72,6 +72,8 @@
     resilio-sync
     tauon
     steam
+    bottles
+    protonup-qt
 
     floorp-bin
 
@@ -168,6 +170,7 @@ home.sessionVariables = {
   };
 
 home.pointerCursor = {
+  enable = true;
   package = pkgs.bibata-cursors;
   name = "Bibata-Modern-Ice";
   size = 24;
