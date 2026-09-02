@@ -87,6 +87,8 @@ programs.noctalia.enable = true;
     shell = pkgs.zsh;
   };
 
+  users.users.rslsync.extraGroups = [ "users"];
+
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans

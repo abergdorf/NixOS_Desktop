@@ -153,6 +153,7 @@ programs.noctalia.enable = true;
     shell = pkgs.zsh;
   };
 
+  users.users.rslsync.extraGroups = [ "users"];
 
 #+end_src
 ** System Packages
@@ -1361,7 +1362,11 @@ window-rule {
     open-on-workspace "chat"
 }
 
-
+// Steam
+window-rule {
+   match app-id=r#"^steam$"#
+   open-on-output "DP-1"
+}
 
 window-rule {
   open-maximized true
