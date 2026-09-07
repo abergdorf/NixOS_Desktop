@@ -152,16 +152,16 @@ services.emacs = {
 services.blueman.enable = true;
 hardware.bluetooth.enable = true;
 
-#services.resilio = {
-#  enable = true;
-#  deviceName = "whiteMamba";
-#  directoryRoot = "~/Documents";
-#  enableWebUI = true;
-#  httpListenAddr = "[::1]";
-#  httpListenPort = 8888;
-#  listeningPort = 44444;
-#  storagePath = "/var/lib/resilio-sync";
-#};
+services.resilio = {
+  enable = true;
+  deviceName = "whiteMamba";
+  directoryRoot = "~/Documents";
+  enableWebUI = true;
+  httpListenAddr = "[::1]";
+  httpListenPort = 8888;
+  listeningPort = 44444;
+  storagePath = "/var/lib/resilio-sync";
+};
 
 services.libinput.enable = true;
 
