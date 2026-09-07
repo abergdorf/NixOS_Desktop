@@ -130,6 +130,8 @@ programs.noctalia.enable = true;
     python3
     xwayland-satellite
     starship
+    bluez
+    blueman
 
 
   ];
