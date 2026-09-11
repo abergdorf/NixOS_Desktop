@@ -65,13 +65,11 @@ For my whiteMamba desktop
 { nixpkgs.config = {
         allowUnfree = true;
         permittedInsecurePackages = [
-┃                 "electron-41.10.6"
-┃               ];
+                 "electron-41.10.6"
+               ];
 };
-
-
-
-} #+end_src
+};
+ #+end_src
 ** Bootloader and Networking
 #+begin_src nix :tangle configuration.nix
 
