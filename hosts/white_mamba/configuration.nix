@@ -15,12 +15,11 @@
   };
 };
    # Allow unfree packages
-{ nixpkgs.config = {
+ nixpkgs.config = {
         allowUnfree = true;
         permittedInsecurePackages = [
                  "electron-41.10.6"
                ];
-};
 };
 
   boot.loader.systemd-boot.enable = true;
