@@ -17,6 +17,10 @@
    # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.config.permittedInsecurePackages = [
+┃                 "electron-41.10.6"
+┃               ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -96,9 +100,6 @@ programs.noctalia.enable = true;
     dejavu_fonts
   ];
 
-permittedInsecurePackages = [
-┃                 "electron-41.10.6"
-┃               ];
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
