@@ -74,6 +74,7 @@
     steam
     bottles
     protonup-qt
+    onlyoffice-desktopeditors
 
     floorp-bin
 
