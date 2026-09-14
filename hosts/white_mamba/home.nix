@@ -83,6 +83,7 @@
     ffmpeg
     yt-dlp
     syncplay
+    positron-bin
 
 (pkgs.rWrapper.override {
     packages = with pkgs.rPackages; [
