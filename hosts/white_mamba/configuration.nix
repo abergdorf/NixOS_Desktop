@@ -24,6 +24,9 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernel.sysctl = {
+  "user.max_user_namespaces" = 10000;
+};
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
