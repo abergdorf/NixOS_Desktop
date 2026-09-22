@@ -69,7 +69,6 @@
     obsidian
     obs-studio
     qbittorrent
-    resilio-sync
     tauon
     steam
     bottles

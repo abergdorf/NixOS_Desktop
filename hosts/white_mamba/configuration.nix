@@ -41,6 +41,10 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  #resilio sync firewall ports
+  networking.firewall.allowedTCPPorts = [ 44444 ];
+  networking.firewall.allowedUDPPorts = [ 44444 ];
+
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
@@ -81,6 +85,7 @@ programs.noctalia.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
    users.users."andrew" = {
     isNormalUser = true;
+    uid = 1000;
     description = "Andrew";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
@@ -163,7 +168,7 @@ hardware.bluetooth.enable = true;
 services.resilio = {
   enable = true;
   deviceName = "whiteMamba";
-  directoryRoot = "~/Documents";
+  directoryRoot = "/home/nixandrew/Documents";
   enableWebUI = true;
   httpListenAddr = "[::1]";
   httpListenPort = 8888;

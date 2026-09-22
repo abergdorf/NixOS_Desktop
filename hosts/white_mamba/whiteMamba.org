@@ -92,6 +92,10 @@ For my whiteMamba desktop
   # Enable networking
   networking.networkmanager.enable = true;
 
+  #resilio sync firewall ports
+  networking.firewall.allowedTCPPorts = [ 44444 ];
+  networking.firewall.allowedUDPPorts = [ 44444 ];
+
 #+end_src
 ** Timezone and Locale
 #+begin_src nix :tangle configuration.nix
@@ -147,6 +151,7 @@ programs.noctalia.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
    users.users."andrew" = {
     isNormalUser = true;
+    uid = 1000;
     description = "Andrew";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
@@ -235,7 +240,7 @@ hardware.bluetooth.enable = true;
 services.resilio = {
   enable = true;
   deviceName = "whiteMamba";
-  directoryRoot = "~/Documents";
+  directoryRoot = "/home/nixandrew/Documents";
   enableWebUI = true;
   httpListenAddr = "[::1]";
   httpListenPort = 8888;
@@ -453,7 +458,6 @@ Putting stuff in userspace
     obsidian
     obs-studio
     qbittorrent
-    resilio-sync
     tauon
     steam
     bottles
