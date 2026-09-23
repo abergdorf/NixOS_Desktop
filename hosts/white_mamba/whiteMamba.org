@@ -234,6 +234,14 @@ services.emacs = {
   enable = true;
 };
 
+
+#ollama
+services.ollama = {
+  enable = true;
+  package = pkgs.ollama-rocm;
+  loadModels = [ "gemma4:26b" "deepseek-r1:8b"];
+};
+
 services.blueman.enable = true;
 hardware.bluetooth.enable = true;
 
