@@ -70,6 +70,7 @@
     obs-studio
     qbittorrent
     tauon
+    plexamp
     steam
     bottles
     protonup-qt
