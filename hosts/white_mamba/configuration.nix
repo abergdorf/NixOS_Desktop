@@ -100,6 +100,8 @@ programs.noctalia.enable = true;
     shell = pkgs.zsh;
   };
 
+  systemd.users.extraConfig = "defaultTimeoutStopSec = 10";
+
   users.users.rslsync.extraGroups = [ "users"];
 
   fonts.packages = with pkgs; [
