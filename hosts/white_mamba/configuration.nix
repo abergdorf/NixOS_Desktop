@@ -28,6 +28,7 @@
   "user.max_user_namespaces" = 10000;
 };
 
+
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -100,7 +101,6 @@ programs.noctalia.enable = true;
     shell = pkgs.zsh;
   };
 
-  systemd.users.extraConfig = "defaultTimeoutStopSec = 10";
 
   users.users.rslsync.extraGroups = [ "users"];
 
@@ -238,8 +238,9 @@ systemd = {
       };
   };
   settings.Manager = {
-     DefaultTimeoutStopSec=10;
+     DefaultTimeoutStopSec="10s";
    };
+  services."user@".serviceConfig.TimeoutStopSec = "10s";
 };
 
 
