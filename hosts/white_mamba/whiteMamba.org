@@ -478,7 +478,6 @@ Putting stuff in userspace
     qbittorrent
     tauon
     plexamp
-    steam
     bottles
     protonup-qt
     onlyoffice-desktopeditors
@@ -1405,7 +1404,11 @@ window-rule {
    match app-id=r#"^steam$"#
    open-on-output "DP-1"
 }
-
+window-rule {
+    match app-id=r#"^steam$"# title=r#"^$"#
+    open-floating true
+    // default-floating-position center=false x=0 y=0 relative-to="cursor"
+}
 window-rule {
   open-maximized true
 }
