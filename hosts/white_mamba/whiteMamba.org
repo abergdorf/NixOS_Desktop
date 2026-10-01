@@ -11,7 +11,7 @@
   - [[#bootloader-and-networking][Bootloader and Networking]]
   - [[#timezone-and-locale][Timezone and Locale]]
   - [[#windowing-and-greeter][Windowing and greeter]]
-  - [[#sound][Sound]]
+  - [[#graphics][Graphics]]
   - [[#users][Users]]
   - [[#system-packages][System Packages]]
   - [[#system-services-and-daemons][System Services and Daemons]]
@@ -143,9 +143,14 @@ programs.noctalia.enable = true;
 
 
 #+end_src
-** Sound
-#+begin_src nix
+** Graphics
+#+begin_src nix :tangle configuration.nix
+hardware.graphics = {
+  enable = true;
+  enable32Bit = true;
+};
 
+hardware.amdgpu.overdrive.enable = true;
 #+end_src
 ** Users
 #+begin_src nix :tangle configuration.nix
@@ -236,6 +241,8 @@ services.emacs = {
   enable = true;
 };
 
+#amd-gpu tool for monitoring
+services.lact.enable = true;
 
 #ollama
 services.ollama = {

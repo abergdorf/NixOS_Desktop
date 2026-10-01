@@ -83,6 +83,13 @@ services.greetd = {
 
 programs.noctalia.enable = true;
 
+hardware.graphics = {
+  enable = true;
+  enable32Bit = true;
+};
+
+hardware.amdgpu.overdrive.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
    users.users."andrew" = {
     isNormalUser = true;
@@ -164,6 +171,8 @@ services.emacs = {
   enable = true;
 };
 
+#amd-gpu tool for monitoring
+services.lact.enable = true;
 
 #ollama
 services.ollama = {
