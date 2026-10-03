@@ -953,7 +953,7 @@ input {
     }
 
     // Uncomment this to make the mouse warp to the center of newly focused windows.
-     warp-mouse-to-focus
+     //warp-mouse-to-focus
 
     // Focus windows and outputs automatically when moving the mouse into them.
     // Setting max-scroll-amount="0%" makes it work only on windows already fully on screen.
@@ -1400,15 +1400,26 @@ window-rule {
 }
 
 // Steam
+// Match all steam-related transient popups/menus
 window-rule {
-   match app-id=r#"^steam$"#
-   open-on-output "DP-1"
+    match app-id=r#"^steam$"#
+    match is-floating=true
+    open-floating true
+    shadow { off; }
 }
+
+// Catch unmapped or empty-title XWayland dropdown subsurfaces
 window-rule {
     match app-id=r#"^steam$"# title=r#"^$"#
     open-floating true
-    // default-floating-position center=false x=0 y=0 relative-to="cursor"
 }
+
+// In case xwayland-satellite maps the popups under the generic xwayland class
+window-rule {
+    match app-id=r#"^xwayland-satellite"#
+    open-floating true
+}
+
 window-rule {
   open-maximized true
 }
