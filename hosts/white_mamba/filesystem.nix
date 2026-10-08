@@ -16,7 +16,12 @@ fileSystems."/home" = {
 fileSystems."/Z" = {
     device = "/dev/disk/by-uuid/B8107B24107AE8B0";
     fsType = "ntfs";
-    options = ["defaults" "users" "nofail" "exec"]; #nofail for HDD
+    options = ["defaults"
+               "users"
+               "nofail" #nofail for HDD
+               "exec"
+               "x-systemd.device-timeout=10s"
+               "x-systemd.automount"];
   };
 
 }
