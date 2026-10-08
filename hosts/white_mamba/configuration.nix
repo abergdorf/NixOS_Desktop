@@ -155,6 +155,8 @@ hardware.amdgpu.overdrive.enable = true;
     bluez
     blueman
     lm_sensors
+    corectrl
+    linuxPackages.it87
 
 
   ];
