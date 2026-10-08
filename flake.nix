@@ -66,6 +66,15 @@
             home-manager.useUserPackages = true;
             home-manager.users.nixandrew = ./hosts/white_mamba/home.nix;
           }
+          ({nixpkgs.overlays = [
+              (final: prev: {
+                semgrep = prev.semgrep.overridePythonAttrs (old: {
+                  # Remove pyjwt from runtime dependency checking, or ignore the check
+                  pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "pyjwt" ];
+                });
+              })
+            ];
+          })
 	      ];
       };
     };
