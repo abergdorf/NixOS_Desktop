@@ -221,6 +221,7 @@ hardware.amdgpu.overdrive.enable = true;
     starship
     bluez
     blueman
+    lm_sensors
 
 
   ];
@@ -544,7 +545,7 @@ Putting stuff in userspace
  #     golem
  #     enviPat
  #   ];
-  })
+ # })
     #python
     #(python314.withPackages (ppkgs: [
     #ppkgs.numpy

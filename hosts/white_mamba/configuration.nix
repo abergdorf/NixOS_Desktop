@@ -154,6 +154,7 @@ hardware.amdgpu.overdrive.enable = true;
     starship
     bluez
     blueman
+    lm_sensors
 
 
   ];

@@ -137,7 +137,7 @@
  #     golem
  #     enviPat
  #   ];
-  })
+ # })
     #python
     #(python314.withPackages (ppkgs: [
     #ppkgs.numpy
