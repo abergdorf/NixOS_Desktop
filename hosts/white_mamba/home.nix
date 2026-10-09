@@ -23,6 +23,13 @@
     nh
     pv
     direnv
+    rustc
+    rustup
+    cargo
+    rustfmt
+    rust-analyzer
+    openssl
+    clippy
 
     #fonts and icons
     bibata-cursors
