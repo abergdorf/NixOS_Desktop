@@ -14,9 +14,11 @@
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     noctalia.url = "github:noctalia-dev/noctalia";
     noctalia.inputs.nixpkgs.follows = "nixpkgs"; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
+    artcraft.url = "path:/home/nixandrew/Applications/Storycraft";
+    artcraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, noctalia, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, sops-nix, pia, noctalia, artcraft, ... }:
   let
     pkgs = import nixpkgs {
       system = "x86_64-linux";
@@ -27,6 +29,9 @@
           "olm-3.2.16"
         ];
       };
+      overlays = [
+        artcraft.overlays.default
+      ];
     };
   in
   {
@@ -67,6 +72,7 @@
             home-manager.users.nixandrew = ./hosts/white_mamba/home.nix;
           }
           ({nixpkgs.overlays = [
+              artcraft.overlays.default
               (final: prev: {
                 semgrep = prev.semgrep.overridePythonAttrs (old: {
                   # Remove pyjwt from runtime dependency checking, or ignore the check
