@@ -100,6 +100,8 @@ xdg.desktopEntries = {
     bottles
     protonup-qt
     onlyoffice-desktopeditors
+    photocraft
+    filmcraft
 
     floorp-bin
 
