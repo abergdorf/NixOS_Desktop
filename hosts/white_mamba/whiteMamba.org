@@ -178,6 +178,11 @@ hardware.amdgpu.overdrive.enable = true;
 #+end_src
 ** System Packages
 #+begin_src nix :tangle configuration.nix
+
+  #appimage setup
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
+
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans

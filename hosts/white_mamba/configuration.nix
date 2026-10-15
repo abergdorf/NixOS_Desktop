@@ -111,6 +111,10 @@ hardware.amdgpu.overdrive.enable = true;
 
   users.users.rslsync.extraGroups = [ "users"];
 
+  #appimage setup
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
+
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
