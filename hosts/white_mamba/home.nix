@@ -102,6 +102,7 @@ xdg.desktopEntries = {
     onlyoffice-desktopeditors
     photocraft
     filmcraft
+    soundcraft
 
     floorp-bin
 
