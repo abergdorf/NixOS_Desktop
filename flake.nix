@@ -71,9 +71,17 @@
             home-manager.useUserPackages = true;
             home-manager.users.nixandrew = ./hosts/white_mamba/home.nix;
           }
-          ({nixpkgs.overlays = [
+          ({
+            nixpkgs.overlays = [
               artcraft.overlays.default
               (final: prev: {
+                semgrep-core = prev.semgrep-core.overrideAttrs (old: {
+                  fixupPhase = builtins.replaceStrings
+                    [ "patchelf --set-interpreter" ]
+                    [ "patchelf --page-size 4096 --set-interpreter" ]
+                    (old.fixupPhase or "");
+                });
+
                 semgrep = prev.semgrep.overridePythonAttrs (old: {
                   # Remove pyjwt from runtime dependency checking, or ignore the check
                   pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "pyjwt" ];

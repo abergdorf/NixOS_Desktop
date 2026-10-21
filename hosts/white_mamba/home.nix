@@ -4,32 +4,12 @@
   home.username = "nixandrew";
   home.homeDirectory = "/home/nixandrew";
 
-xdg.desktopEntries = {
-  photocraft = {
-    name = "PhotoCraft";
-    genericName = "Photo Automation Tool";
-    comment = "Automate photo workflows";
-    # This automatically runs the app inside an environment wrapped with its graphic libraries
-    exec = let
-      runtimeLibs = with pkgs; [ wayland libxkbcommon vulkan-loader libGL ];
-    in "${pkgs.writeShellScript "photocraft-wrapped" ''
-      export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath runtimeLibs}:$LD_LIBRARY_PATH"
-      exec /home/nixandrew/Applications/photocraft/target/release/photocraft
-    ''}";
-    icon = "image-viewer"; # Uses your system theme's fallback image icon
-    terminal = false;
-    categories = [ "Graphics" "Utility" ];
-  };
-};
-
   home.packages = with pkgs; [
 
     #dependencies
     fd
     ripgrep
-    semgrep.overrideAttrs (old: {
-      doCheck = false;
-    })
+    semgrep
     cmake
     gcc
     llvm
