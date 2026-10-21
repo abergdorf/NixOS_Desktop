@@ -446,7 +446,9 @@ xdg.desktopEntries = {
     #dependencies
     fd
     ripgrep
-    semgrep
+    semgrep.overrideAttrs (old: {
+      doCheck = false;
+    })
     cmake
     gcc
     llvm
