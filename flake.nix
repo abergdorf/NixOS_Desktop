@@ -71,6 +71,11 @@
             home-manager.useUserPackages = true;
             home-manager.users.nixandrew = ./hosts/white_mamba/home.nix;
           }
+          ({
+            nixpkgs.overlays = [
+              artcraft.overlays.default
+            ];
+          })
          # ({
          #   nixpkgs.overlays = [
          #     artcraft.overlays.default
