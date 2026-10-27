@@ -429,7 +429,7 @@ Putting stuff in userspace
     #dependencies
     fd
     ripgrep
-    semgrep
+    #semgrep
     cmake
     gcc
     llvm
@@ -490,6 +490,7 @@ Putting stuff in userspace
     cliphist
     waypaper
     thunar
+    kdePackages.dolphin
     btop
 
 
@@ -1114,7 +1115,7 @@ binds {
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Mod+B hotkey-overlay-title="Open a browser: floorp" {spawn "floorp"; }
     Mod+E hotkey-overlay-title="Open an editor: emacs" {spawn "emacs"; }
-    Mod+F hotkey-overlay-title="Open a file manager: thunar" {spawn "thunar"; }
+    Mod+F hotkey-overlay-title="Open a file manager: dolphin" {spawn "dolphin"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
     Super+Shift+r allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill noctalia || exec noctalia"; }

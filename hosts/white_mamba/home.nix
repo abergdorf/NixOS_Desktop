@@ -9,7 +9,7 @@
     #dependencies
     fd
     ripgrep
-    semgrep
+    #semgrep
     cmake
     gcc
     llvm
@@ -70,6 +70,7 @@
     cliphist
     waypaper
     thunar
+    kdePackages.dolphin
     btop
 
 
